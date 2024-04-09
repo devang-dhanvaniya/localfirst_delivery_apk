@@ -1,0 +1,49 @@
+export const VENDOR_MAIN_TAB = 'VENDOR_MAIN_TAB';
+export const VENDOR_MAIN_STACK = 'VENDOR_MAIN_STACK';
+export const DELIVERY_MAIN_STACK = 'DELIVERY_MAIN_STACK';
+export const AUTH_STACK = 'AUTH_STACK';
+
+export const NOTIFICATION = 'NOTIFICATION';
+export const ORDER_MANAGEMENT = 'ORDER_MANAGEMENT';
+
+export const CUSTOMER_LIST = 'CUSTOMER_LIST';
+export const CUSTOMER_DETAILS = "CUSTOMER_DETAILS"
+
+export const LOGIN = 'LOGIN';
+export const REGISTER = 'REGISTER';
+export const FORGOT_PASSWORD = 'FORGOT_PASSWORD';
+
+export const DASHBOARD_STACK = 'DASHBOARD_STACK';
+export const ADD_PRODUCTS_STACK = 'ADD_PRODUCTS_STACK';
+export const ADD_CATEGORY_STACK = 'ADD_CATEGORY_STACK';
+export const INVOICE_STACK = 'INVOICE_STACK';
+export const MY_STORE_STACK = 'MY_STORE_STACK';
+export const SETTING_STACK = "SETTING_STACK";
+
+export const CHAT_STACK = 'CHAT_STACK';
+export const ORDER_STACK = 'ORDER_STACK';
+
+export const DASHBOARD = 'DASHBOARD';
+export const PRODUCT = 'PRODUCT';
+export const PRODUCT_FORM = 'PRODUCT_FORM';
+export const BULK_PRODUCT_UPLOAD = 'BULK_PRODUCT_UPLOAD';
+export const ADD_CATEGORY = 'ADD_CATEGORY';
+export const INVOICE = 'INVOICE';
+export const CHAT = 'CHAT';
+export const ORDER = 'ORDER';
+export const ORDER_FORM = 'ORDER_FORM';
+export const ORDER_FINAL_FORM = 'ORDER_FINAL_FORM';
+export const ORDER_ADDRESS_FORM = 'ORDER_ADDRESS_FORM';
+export const USER_FORM = 'USER_FORM';
+export const ORDER_DETAILS = 'ORDER_DETAILS';
+
+export const MY_STORE = 'MY_STORE';
+export const PROMOTION_LIST = 'PROMOTION_LIST';
+export const PROMOTION_DETAILS = 'PROMOTION_DETAILS';
+export const PROMOTION_FORM = 'PROMOTION_FORM';
+
+export const SETTING = "SETTING";
+export const COUPON = "COUPON";
+export const COUPON_FORM = "COUPON_FORM";
+export const STOCK_MANAGEMENT = "STOCK_MANAGEMENT";
+export const RESET_MANAGEMENT = "RESET_MANAGEMENT";
