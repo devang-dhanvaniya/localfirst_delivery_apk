@@ -10,7 +10,7 @@ export const api = createApi({
     baseUrl: BaseUrl.BASE_URL,
     prepareHeaders: async (headers, { endpoint, getState }) => {
       const user: any = await getAsyncStorage(Storage.USER);
-      headers.set('Authorization', `Bearer ${user?.access_token}`);
+      headers.set('Authorization', `Bearer ${user?.token}`);
       return headers;
     },
   }),

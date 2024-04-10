@@ -1,7 +1,6 @@
 import {NativeModules} from 'react-native';
 
 // PROJECT IMPORT
-import dashboardSlice from '../features/dashboard/dashboardSlice';
 import {clearAllAsyncStorage} from '../commonFunctions';
 import {api} from './api';
 
@@ -12,10 +11,11 @@ import {
   combineReducers,
   configureStore,
 } from '@reduxjs/toolkit';
+import orderSlice from '../features/order/orderSlice';
 
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
-  dashboard: dashboardSlice,
+  order: orderSlice,
 });
 
 export const middleware: Middleware =

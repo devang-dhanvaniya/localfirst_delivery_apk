@@ -1,7 +1,6 @@
 import React from 'react';
 
 // PROJECT IMPORT
-import MainStackTabNavigator from './MainStackTabNavigator';
 import { Notification } from '../features';
 import { Navigator } from '../constant';
 
@@ -14,7 +13,7 @@ const DeliveryMainStackNavigator = () => {
   return (
     <MainStack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}>
       <MainStack.Screen
         name={Navigator.NOTIFICATION}

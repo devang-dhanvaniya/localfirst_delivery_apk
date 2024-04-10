@@ -1,12 +1,12 @@
 import React from 'react';
 
 // PROJECT IMPORT
-import MainStackTabNavigator from './MainStackTabNavigator';
-import { Notification } from '../features';
-import { Navigator } from '../constant';
+import {Navigator} from '../constant';
+import Order from '../features/order/Order';
 
 // THIRD - PARTY IMPORT
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import OrderDetails from '../features/order/OrderDetails';
 
 const MainStackNavigator = () => {
   const MainStack = createNativeStackNavigator();
@@ -14,16 +14,10 @@ const MainStackNavigator = () => {
   return (
     <MainStack.Navigator
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
       }}>
-      <MainStack.Screen
-        name={Navigator.VENDOR_MAIN_TAB}
-        component={MainStackTabNavigator}
-      />
-      <MainStack.Screen
-        name={Navigator.NOTIFICATION}
-        component={Notification}
-      />
+      <MainStack.Screen name={Navigator.ORDER} component={Order} />
+      <MainStack.Screen name={Navigator.ORDER_DETAILS} component={OrderDetails} />
     </MainStack.Navigator>
   );
 };

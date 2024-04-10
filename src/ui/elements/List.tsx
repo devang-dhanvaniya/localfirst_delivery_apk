@@ -8,7 +8,7 @@ import {
 import React from 'react';
 
 // PROJECT IMPORT
-import { Filter } from '../../features';
+import { Filter } from '../../features/common';
 import { hp, wp } from '../../commonFunctions';
 
 // THIRD - PARTY IMPORT

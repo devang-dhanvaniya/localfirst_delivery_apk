@@ -1,147 +1,52 @@
-import {
-  Image,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
-
-// UI IMPORT
-import {List, Text} from '../../ui';
-
-// PROJECT IMPORT
+import {commonStyles, textStyles} from '../../styles';
 import {Colors} from '../../constant';
-import {useGetDashboardQuery} from './dashboardApi';
-import {useDashboardSummary} from './dashboardSlice';
-import { wp } from '../../commonFunctions';
-import {dashboardSummaryInitialItems} from './mock';
+import {Button, Icon} from '../../ui';
 
 const Dashboard = () => {
-
-  useGetDashboardQuery(undefined, {refetchOnMountOrArgChange: true});
-  const items = useDashboardSummary();
-
-  const Item = (item: any) => {
-    return (
-      <View style={styles.summaryMainBox}>
-        <View style={styles.summaryBox}>
-          <View>
-            <Image source={item.image} />
-          </View>
-          <View>
-            <Text style={styles.heading}>{item.heading}</Text>
-            <Text style={styles.value}>{[items?.[item?.key]]}</Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
   return (
-    <SafeAreaView style={{flex: 1}}>
-      <ScrollView>
-        <View style={styles.mainbox}>
-         
-          <View>
-            <List
-              data={dashboardSummaryInitialItems}
-              renderItem={({item,index}) => <Item {...item} index={index} />}
-              numColumns={2}
-              refreshControl={undefined}
-              style={{gap: 2}}
-            />
-
-            {/* <View>
-              <Text style={styles.cardHeading}>Sales Comparasions</Text>
-              <View style={styles.card}>
-                <View style={styles.saleTextBox}>
-                  <Text style={styles.salePer}> +10.2%</Text>
-                  <Text style={styles.saleText}>vs Previous Monday</Text>
-                </View>
-                <Image source={require('../../assets/images/Logo.png')} />
-              </View>
-            </View>
-            <View>
-              <Text style={styles.cardHeading}>Weekly Activity</Text>
-              <View style={styles.card}>
-                <View style={styles.saleTextBox}>
-                  <Text style={styles.salePer}> +10.2%</Text>
-                  <Text style={styles.saleText}>vs Previous Monday</Text>
-                </View>
-                <Image source={require('../../assets/images/Logo.png')} />
-              </View>
-            </View> */}
+    <View>
+      {/* Dash Card */}
+      <View style={commonStyles.flexBetweenCenter}>
+        <Text style={textStyles.dark16600}>Active Orders</Text>
+        <Text style={textStyles.theme14500}>See all</Text>
+      </View>
+      <View style={commonStyles.whiteCard}>
+        <View style={commonStyles.flexBetweenCenter}>
+          <Text style={textStyles.dark16600}>Order #232-318318-8747</Text>
+          <View style={[commonStyles.flexBetweenCenter, {gap: 3}]}>
+            <View style={styles.badge}></View>
+            <Text style={textStyles.theme14700}>COD</Text>
           </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+        <View
+          style={[commonStyles.flexAlignCenter, {gap: 5, paddingVertical: 8}]}>
+          <Icon name="DashboardIcon" />
+          <Text style={textStyles.green14500}>Restaurant Location</Text>
+        </View>
+        <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+          <Icon name="LocationIcon" size={20} />
+          <Text style={[, commonStyles.container, textStyles.theme14500]}>
+            6, the Main Road, Iblur Village, Bellandur, Bengaluru, Karnataka
+            560103, India
+          </Text>
+        </View>
+        <Button text="Order Details" />
+      </View>
+      {/* Dash Card */}
+    </View>
   );
 };
 
 export default Dashboard;
 
 const styles = StyleSheet.create({
-  mainbox: {
-    flex: 1,
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    backgroundColor: '#F7F8FC',
-  },
-
-  // SummrayCard
-  summaryMainBox: {
-    padding: 5,
-  },
-  summaryBox: {
-    width: wp(43),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    paddingVertical: 20,
-    paddingHorizontal: 17,
-  },
-  heading: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: Colors.SECONDRAY,
-  },
-  value: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#232323',
-  },
-
-  // Chartsec
-  cardHeading: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.BLACK,
-    paddingTop: 20,
-    paddingBottom: 12,
-  },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 15,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-  },
-  saleTextBox: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-  },
-  saleText: {
-    fontSize: 12,
-    fontWeight: '400',
-    color: Colors.SECONDRAY,
-  },
-  salePer: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#65B348',
+  //   Dash
+  badge: {
+    height: 6,
+    width: 6,
+    backgroundColor: Colors.PRIMARY,
+    borderRadius: 50,
   },
 });

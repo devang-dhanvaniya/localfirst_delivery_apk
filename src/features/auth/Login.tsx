@@ -10,7 +10,7 @@ import React, {useEffect, useState} from 'react';
 // UI IMPORT
 
 // PROJECT IMPORT
-import {Colors, Navigator} from '../../constant';
+import {Colors} from '../../constant';
 import {useAuth} from '../../hooks';
 import {prepareResponse} from '../../commonFunctions';
 import {ResToast, initialResToast} from '../common';
@@ -25,7 +25,7 @@ const Login = ({navigation}: any) => {
   const {onLogin} = useAuth();
   const [resToast, setResToast] = useState<ResToast>(initialResToast);
   const schema: any = yup.object({
-    email: yup.string().required('Please enter a email'),
+    email_id: yup.string().required('Please enter a email'),
     password: yup
       .string()
       .required('Please enter a password')
@@ -39,7 +39,7 @@ const Login = ({navigation}: any) => {
   } = useForm({
     resolver: yupResolver<any>(schema),
     defaultValues: {
-      email: 'nensi@gmail.com',
+      email_id: 'nensi@gmail.com',
       password: '6A3iItdI97ShiwY',
     },
   });
@@ -69,7 +69,7 @@ const Login = ({navigation}: any) => {
             </View>
             <View style={styles.fieldbox}>
               <ControlledInput
-                name="email"
+                name="email_id"
                 label="Email"
                 placeholder="Enter Email"
                 control={control}

@@ -20,7 +20,7 @@ const AppNavigator = () => {
         headerShown: false,
       }}
       >
-      {user?.access_token ? (
+      {user?.token ? (
         <>
           {user?.role === Common.VENDOR ? (
             <MainStack.Screen

@@ -34,7 +34,7 @@ const AuthProvider = ({children}: AuthProviderProps) => {
   const onLogin = async (payload: any) => {
     try {
       const response = await fetch(
-        `${BaseUrl.BASE_URL}${BaseUrl.DELIVERY_PERSON}/deliveryPerson/delivery-person-login`,
+        `${BaseUrl.BASE_URL}${BaseUrl.DELIVERY_PERSON}/delivery-person-login`,
         {
           method: 'POST',
           body: JSON.stringify(payload),

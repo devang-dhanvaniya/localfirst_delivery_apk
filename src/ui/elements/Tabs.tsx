@@ -2,7 +2,7 @@ import {FlatList, Pressable, StyleSheet, Text} from 'react-native';
 import React from 'react';
 
 // PROJECT IMPORT
-import {OptionTypes} from '../../features';
+import { OptionTypes } from '../../features/common';
 import {Colors, Common} from '../../constant';
 import {textStyles} from '../../styles';
 
@@ -30,6 +30,7 @@ const Tabs = (props: TabsProps) => {
       showsHorizontalScrollIndicator={false}
       data={options}
       style={style}
+      
       renderItem={({item}) => {
         return (
           <>
