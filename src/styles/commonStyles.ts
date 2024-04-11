@@ -21,6 +21,10 @@ export const commonStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  flexAlignEnd: {
+    flexDirection: 'row',
+    alignContent: 'flex-end',
+  },
   flexJustifyCenter: {
     flexDirection: 'row',
     justifyContent: 'center',

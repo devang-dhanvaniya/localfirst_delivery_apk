@@ -32,6 +32,8 @@ const initialLocalFilter = {
 };
 
 const Order = ({navigation}: any) => {
+  const {clearAuth} = useAuth();
+
   const ref = useRef<any>();
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
@@ -97,9 +99,8 @@ const Order = ({navigation}: any) => {
   const prepareTabsOptions = () => {
     return [{[VALUE]: ALL, [LABEL]: ALL}, ...orderStatusOtions];
   };
-  const OrderBox = (item: any) => {
-    console.log(item, 'itemitemitemitem');
 
+  const OrderBox = (item: any) => {
     return (
       <>
         <Pressable
@@ -147,7 +148,7 @@ const Order = ({navigation}: any) => {
                   ref.current.present();
                 }}>
                 <View style={commonStyles.flexBetweenCenter}>
-                  <Text style={[textStyles.gray12600, styles.pending]}>
+                  <Text style={[textStyles.gray12600, styles.bg_initialized]}>
                     {item?.status}
                   </Text>
                 </View>
@@ -165,6 +166,16 @@ const Order = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={[commonStyles.container, styles.container]}>
+      <Pressable
+        onPress={() => {
+          clearAuth();
+        }}>
+        <View style={[commonStyles.flexAlignCenter, {gap: 4}]}>
+          <Text>Logout</Text>
+          <Icon name="LogoutIcon" size={18} />
+        </View>
+      </Pressable>
+      <Text>Logout</Text>
       <View
         style={{
           paddingHorizontal: 10,
@@ -200,18 +211,6 @@ const Order = ({navigation}: any) => {
           onChangeText={status => {
             onUpdateStatus(status);
           }}
-        />
-        <AnimatedFAB
-          icon={PlusImage}
-          label={'Add'}
-          extended={false}
-          onPress={() => {
-            navigation.navigate(Navigator.ORDER_FORM);
-          }}
-          visible={true}
-          animateFrom="right"
-          iconMode="dynamic"
-          style={[styles.fabStyle]}
         />
       </View>
     </SafeAreaView>
@@ -295,5 +294,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'space-between',
     width: '100%',
+  },
+  bg_initialized: {
+    color: 'yellow',
+    backgroundColor: 'black',
+  },
+  bg_success: {
+    color: 'blue',
+    backgroundColor: 'black',
   },
 });

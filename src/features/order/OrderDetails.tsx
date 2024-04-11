@@ -1,16 +1,85 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useRef, useState} from 'react';
 import {commonStyles, textStyles} from '../../styles';
-import {Colors} from '../../constant';
-import {Button} from '../../ui';
+import {Colors, Navigator} from '../../constant';
+import {Button, List, UIImage} from '../../ui';
+import {useGetOrderDetailsQuery} from './orderApi';
+import {useGetOrderDetails} from './orderSlice';
+import ControlledImagePicker from '../../ui/pickers/ControlledImagePicker';
+import {prepareImageUrl} from '../../commonFunctions';
+import FastImage from 'react-native-fast-image';
 
-const OrderDetails = () => {
+const OrderDetails = ({route, navigation}: any) => {
+  const ref = useRef<any>();
+  const orderId = route?.params?.id;
+  const orderDetails = useGetOrderDetails();
+  useGetOrderDetailsQuery(orderId);
+  console.log(
+    orderDetails?.order_item?.length,
+    'orderDetailsorderDetailsorderDetailsorderDetailsorderDetails',
+  );
+  const addressUser = `${orderDetails?.shipping_address?.address1}, ${orderDetails?.shipping_address?.landmark}, ${orderDetails?.shipping_address?.city}, ${orderDetails?.shipping_address?.pincode}`;
+
+  const OrderDetailsBox = (item: any) => {
+    return (
+      <>
+        <Pressable
+          onPress={() => {
+            navigation.navigate(Navigator.ORDER_DETAILS, {
+              id: item?.id,
+            });
+          }}>
+          <View
+            style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
+            <View
+              style={[
+                commonStyles.flexBetweenCenter,
+                commonStyles.container,
+                {gap: 5},
+              ]}>
+              <View>
+                <FastImage
+                  style={{height: 90, width: 50}}
+                  source={{
+                    uri: prepareImageUrl(item?.product?.photo?.split(',')?.[0])
+                      ?.uri,
+                    headers: {Authorization: 'someAuthtoken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
+              </View>
+              <View
+                style={[
+                  commonStyles.flexBetweenCenter,
+                  commonStyles.container,
+                  {gap: 5},
+                ]}>
+                <View>
+                  <Text style={textStyles.dark14600}>
+                    {item?.product?.title}
+                  </Text>
+                  <Text style={textStyles.gray14400}>Price: {item?.price}</Text>
+                </View>
+                <View>
+                  <Text style={textStyles.green12500}>
+                    Quantity: {item?.quantity}
+                  </Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Pressable>
+      </>
+    );
+  };
+
   return (
     <View style={[commonStyles.container, styles.pageMain]}>
       {/* Restaurant Detail */}
       <View style={commonStyles.whiteCard}>
         <View style={styles.orderFirstsec}>
-          <Text style={textStyles.dark14600}>Restaurant Details</Text>
+          <Text style={textStyles.dark14600}>Shop Details</Text>
         </View>
         <View style={commonStyles.flexBetweenCenter}>
           <View
@@ -26,11 +95,66 @@ const OrderDetails = () => {
               />
             </View>
             <View>
-              <Text style={textStyles.dark14600}>Mc Donald’s</Text>
-              <Text style={textStyles.gray14400}>
-                6, the Main Road, Iblur Village, Bellandur, Bengaluru, Karnataka
-                560103, India
+              <Text style={textStyles.dark14600}>
+                {orderDetails?.store?.store_name || ''}
               </Text>
+              <Text style={textStyles.gray14400}>
+                {orderDetails?.pickup_address?.pickup_address || ''}
+              </Text>
+            </View>
+          </View>
+          {/* <View style={[styles.spaceBox, commonStyles.container]}>
+            <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
+              <Icon
+                name="CallIcon"
+                pathStyles={{
+                  1: {fill: Colors.SECONDRAY},
+                }}
+              />
+              <Icon
+                name="ChatIcon"
+                pathStyles={{
+                  1: {fill: Colors.SECONDRAY},
+                }}
+              />
+            </View>
+          </View> */}
+        </View>
+      </View>
+
+      {/* User Detail */}
+      <View style={commonStyles.whiteCard}>
+        <View style={styles.orderFirstsec}>
+          <Text style={textStyles.dark14600}>User Details</Text>
+        </View>
+        <View style={commonStyles.flexBetweenCenter}>
+          <View
+            style={[
+              commonStyles.flexAlignStart,
+              commonStyles.container,
+              {gap: 10},
+            ]}>
+            <View>
+              <FastImage
+                style={styles.promotionImg}
+                source={{
+                  uri: prepareImageUrl(orderDetails?.store?.photo)?.uri,
+                  headers: {Authorization: 'someAuthtoken'},
+                  priority: FastImage.priority.high,
+                }}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+              {/* <Image
+                source={require('../../assets/images/product.png')}
+                style={{borderRadius: 50, height: 40, width: 40}}
+              /> */}
+            </View>
+            <View>
+              <Text style={textStyles.dark14600}>
+                {orderDetails?.shipping_address?.name || ''}{' '}
+                {orderDetails?.shipping_address?.lname || ''}
+              </Text>
+              <Text style={textStyles.gray14400}>{addressUser}</Text>
             </View>
           </View>
           {/* <View style={[styles.spaceBox, commonStyles.container]}>
@@ -57,53 +181,51 @@ const OrderDetails = () => {
           <Text style={textStyles.dark14600}>Item details</Text>
         </View>
         <View style={[commonStyles.flexBetweenCenter, {paddingTop: 8}]}>
-          <Text style={textStyles.theme12600}>Total Iteam: 2</Text>
+          <Text style={textStyles.theme12600}>
+            Total Item: {orderDetails?.order_item?.length}
+          </Text>
           <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-            <View style={styles.badge}></View>
-            <Text style={textStyles.theme14700}>COD</Text>
+            {/* <View
+              style={[
+                orderDetails?.payment_type === 'COD'
+                  ? styles.green
+                  : styles.yellow,
+                styles.badge,
+              ]}/> */}
+            <Text
+              style={[
+                orderDetails?.payment_type === 'COD'
+                  ? textStyles.theme14700
+                  : textStyles.green12600,
+              ]}>
+              {orderDetails?.payment_type}
+            </Text>
           </View>
         </View>
-        <View style={[commonStyles.flexBetweenCenter, styles.itemCard]}>
-          <View
-            style={[
-              commonStyles.flexAlignCenter,
-              commonStyles.container,
-              {gap: 10},
-            ]}>
-            <View>
-              <Image source={require('../../assets/images/product.png')} />
-            </View>
-            <View>
-              <Text style={textStyles.dark14600}>SAMSUNG Galaxy</Text>
-              <Text style={textStyles.dark12500}>Price: $233</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={textStyles.green12500}>Quantity: 2</Text>
-          </View>
-        </View>
-        <View style={[commonStyles.flexBetweenCenter, styles.itemCard]}>
-          <View
-            style={[
-              commonStyles.flexAlignCenter,
-              commonStyles.container,
-              {gap: 10},
-            ]}>
-            <View>
-              <Image source={require('../../assets/images/product.png')} />
-            </View>
-            <View>
-              <Text style={textStyles.dark14600}>SAMSUNG Galaxy</Text>
-              <Text style={textStyles.dark12500}>Price: $233</Text>
-            </View>
-          </View>
-          <View>
-            <Text style={textStyles.green12500}>Quantity: 2</Text>
-          </View>
+        <List
+          isLoading={false}
+          data={orderDetails?.order_item || []}
+          renderItem={({item, index}) => (
+            <OrderDetailsBox {...item} index={index} />
+          )}
+          showsVerticalScrollIndicator={false}
+          numColumns={1}
+          onEndReachedThreshold={0.5}
+        />
+        <View style={commonStyles.flexAlignEnd}>
+          <Text style={[textStyles.gray14400]}>
+            Total: {orderDetails?.total_payment}
+          </Text>
         </View>
       </View>
 
-      <Button style={styles.buttonBottom} text="Submit" />
+      <Button
+        style={styles.buttonBottom}
+        text="Click for Confirmation"
+        onPress={() => {
+          navigation.navigate(Navigator.OTP_VERIFICATION);
+        }}
+      />
     </View>
   );
 };
@@ -118,7 +240,6 @@ const styles = StyleSheet.create({
   badge: {
     height: 6,
     width: 6,
-    backgroundColor: Colors.PRIMARY,
     borderRadius: 50,
   },
   spaceBox: {
@@ -158,5 +279,17 @@ const styles = StyleSheet.create({
     bottom: 20,
     right: 10,
     left: 10,
+  },
+  promotionImg: {
+    borderTopRightRadius: 12,
+    borderTopLeftRadius: 12,
+    width: '100%',
+    height: 100,
+  },
+  green: {
+    color: 'green',
+  },
+  yellow: {
+    color: 'orange',
   },
 });

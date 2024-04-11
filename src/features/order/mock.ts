@@ -7,10 +7,10 @@ export const orderStatusOtions = [
     value: 'Delivered',
     label: 'Delivered',
   },
-  {
-    value: 'Failed',
-    label: 'Failed',
-  },
+  // {
+  //   value: 'Failed',
+  //   label: 'Failed',
+  // },
 ];
 
 export const addressTypeOptions = [

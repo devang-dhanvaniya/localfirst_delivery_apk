@@ -11,7 +11,6 @@ export const orderApi = api.injectEndpoints({
         method: 'POST',
       }),
     }),
-
     updateOrderStatus: build.mutation<any, any>({
       query: params => ({
         url: `${BaseUrl.DELIVERY_PERSON}/order/update-order-status`,
@@ -19,10 +18,19 @@ export const orderApi = api.injectEndpoints({
         method: 'POST',
       }),
     }),
+    getOrderDetails: build.query<any, any>({
+      query: params =>
+        `${BaseUrl.DELIVERY_PERSON}/order/get-order-details/${params}`,
+    }),
   }),
 });
 
-export const {useGetOrdersMutation, useUpdateOrderStatusMutation} = orderApi;
 export const {
-  endpoints: {getOrders, updateOrderStatus},
+  useGetOrdersMutation,
+  useUpdateOrderStatusMutation,
+  useGetOrderDetailsQuery,
+} = orderApi;
+
+export const {
+  endpoints: {getOrders, updateOrderStatus, getOrderDetails},
 } = orderApi;

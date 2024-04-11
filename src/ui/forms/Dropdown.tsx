@@ -8,7 +8,7 @@ import {Icon, IconKeys} from '../icons';
 // PROJECT IMPORT
 import {Colors, Common} from '../../constant';
 import DropdownModal from './DropdownModal';
-import {OptionTypes} from '../../features';
+import {OptionTypes} from '../../features/common';
 
 export type DropdownVatiants = 'Normal' | 'MultiSelect';
 export interface DropdownProps {
@@ -26,7 +26,7 @@ export interface DropdownProps {
   options: OptionTypes[];
   valueKey?: string;
   labelKey?: string;
-  onChangeText?: (value: any,e?:any) => void;
+  onChangeText?: (value: any, e?: any) => void;
   onIconPress?: (e?: any) => void;
 }
 const Dropdown = (props: DropdownProps) => {
@@ -72,7 +72,7 @@ const Dropdown = (props: DropdownProps) => {
         }
       } else {
         if (item?.[valueKey]?.toString() === value?.toString()) {
-          labels[0] =(item?.[labelKey]);
+          labels[0] = item?.[labelKey];
         }
       }
     });
