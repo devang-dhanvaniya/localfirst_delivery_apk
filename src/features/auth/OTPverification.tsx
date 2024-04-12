@@ -42,10 +42,6 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
     if (newPin.every(digit => digit !== '')) {
       onComplete && onComplete(newPin?.join(''));
     }
-    console.log(
-      newPin.some((digit, i) => i === index + 1 && digit === ''),
-      'digit[index + 1]',
-    );
 
     if (
       newPin.some((digit, i) => i === index + 1 && digit === '') &&
@@ -56,9 +52,6 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
   };
 
   const onSubmit = async (values: any) => {
-    console.log('newPin====>', newPin, 'mainOtp====>', mainOtp);
-    const arr = [];
-
     onLogin(values);
   };
 

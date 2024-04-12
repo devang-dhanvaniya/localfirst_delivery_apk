@@ -12,7 +12,6 @@ import {Navigator} from '../constant';
 const AppNavigator = () => {
   const MainStack = createNativeStackNavigator();
   const {user} = useAuth();
-  console.log(user, 'useruseruseruseruseruser');
 
   return (
     <MainStack.Navigator

@@ -97,11 +97,6 @@ const Login = ({navigation}: any) => {
               <View>
                 <Button text="Sign In" onPress={handleSubmit(onSubmit)} />
               </View>
-              <View style={styles.orbox}>
-                <View style={styles.border} />
-                <Text style={styles.ortext}>Or sign in with</Text>
-                <View style={styles.border} />
-              </View>
             </View>
           </View>
         </ScrollView>
@@ -118,6 +113,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
     resizeMode: 'cover',
+    flexDirection:'row',
+    alignItems:'center',   
   },
   mainbox: {
     padding: 28,

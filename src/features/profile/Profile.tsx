@@ -11,7 +11,7 @@ import {useGetDeliveryDetails} from '../order/orderSlice';
 import {useGetDeliveryPersonDetailsQuery} from '../order/orderApi';
 import {commonStyles, textStyles} from '../../styles';
 import {useAuth} from '../../hooks';
-import {Icon} from '../../ui';
+import {Button, Icon} from '../../ui';
 import {Colors} from '../../constant';
 
 const Profile = () => {
@@ -62,6 +62,13 @@ const Profile = () => {
             </View>
           </View>
         </View>
+        <Button
+          text="Logout"
+          onPress={() => {
+            clearAuth();
+          }}
+          style={styles.logoutBtn}
+        />
       </View>
 
       <Text>Profile</Text>
@@ -85,5 +92,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.GREEN,
     borderWidth: 2,
     borderRadius: 24,
+  },
+  logoutBtn: {
+    paddingHorizontal: 6,
+    paddingVertical: 5,
   },
 });
