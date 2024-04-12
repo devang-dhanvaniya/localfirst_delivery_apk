@@ -8,6 +8,8 @@ import Order from '../features/order/Order';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OrderDetails from '../features/order/OrderDetails';
 import {OTPverification} from '../features';
+import {Header} from '../ui';
+import {Profile} from '../features/profile';
 
 const MainStackNavigator = () => {
   const MainStack = createNativeStackNavigator();
@@ -16,6 +18,7 @@ const MainStackNavigator = () => {
     <MainStack.Navigator
       screenOptions={{
         headerShown: true,
+        headerRight: () => <Header />,
       }}>
       <MainStack.Screen name={Navigator.ORDER} component={Order} />
       <MainStack.Screen
@@ -26,6 +29,7 @@ const MainStackNavigator = () => {
         name={Navigator.OTP_VERIFICATION}
         component={OTPverification}
       />
+      <MainStack.Screen name={Navigator.PROFILE} component={Profile} />
     </MainStack.Navigator>
   );
 };

@@ -7,7 +7,7 @@ const setTopLevelNavigator = (navigationRef: any) => {
   navigator = navigationRef;
 };
 
-const navigate = (route: any, params: any) => {
+const navigate = (route: any, params?: any) => {
   navigator.dispatch(
     CommonActions.navigate(route, {
       ...params,

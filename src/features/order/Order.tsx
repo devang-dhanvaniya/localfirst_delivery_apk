@@ -166,16 +166,7 @@ const Order = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={[commonStyles.container, styles.container]}>
-      <Pressable
-        onPress={() => {
-          clearAuth();
-        }}>
-        <View style={[commonStyles.flexAlignCenter, {gap: 4}]}>
-          <Text>Logout</Text>
-          <Icon name="LogoutIcon" size={18} />
-        </View>
-      </Pressable>
-      <Text>Logout</Text>
+      
       <View
         style={{
           paddingHorizontal: 10,

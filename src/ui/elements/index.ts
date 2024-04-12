@@ -4,3 +4,4 @@ export {default as Loader} from './Loader';
 export {default as List} from './List';
 export {default as Tabs} from './Tabs';
 export {default as UIModal} from './UIModal';
+export {default as Header} from './Header';

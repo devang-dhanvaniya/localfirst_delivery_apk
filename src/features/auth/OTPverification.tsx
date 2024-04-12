@@ -1,38 +1,73 @@
 import {
   Image,
   ImageBackground,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 // UI IMPORT
-import {Button, ControlledInput} from '../../ui';
+import {Button} from '../../ui';
 
 // PROJECT IMPORT
 import {useAuth} from '../../hooks';
 
-// THIRD - PARTY IMPORT
-import {yupResolver} from '@hookform/resolvers/yup';
-import {useForm} from 'react-hook-form';
-import * as yup from 'yup';
+type InputProps = {
+  length?: number;
+  onComplete?: (pin: string) => void;
+};
 
-const OTPverification = () => {
+const OTPverification = ({length = 4, onComplete}: InputProps) => {
   const {onLogin} = useAuth();
+  const [OTP, setOTP] = useState<string[]>(Array(length).fill(''));
+  const [counter, setCounter] = useState(60);
+  const inputRef: any = useRef<HTMLInputElement[]>(Array(length).fill(null));
+  const [mainOtp, setMainOtp] = useState('1234');
 
-  const {
-    control,
-    handleSubmit,
-    formState: {errors},
-  } = useForm();
+  let newPin = [...OTP];
+  const handleTextChange = (input: string, index: number) => {
+    newPin[index] = input;
+    setOTP(newPin);
+
+    // if (input.length === 1 && index < length - 1) {
+    //   inputRef.current[index + 1]?.focus();
+    // }
+    if (input.length === 0 && index > 0) {
+      inputRef.current[index - 1]?.focus();
+    }
+    if (newPin.every(digit => digit !== '')) {
+      onComplete && onComplete(newPin?.join(''));
+    }
+    console.log(
+      newPin.some((digit, i) => i === index + 1 && digit === ''),
+      'digit[index + 1]',
+    );
+
+    if (
+      newPin.some((digit, i) => i === index + 1 && digit === '') &&
+      input.length === 1
+    ) {
+      inputRef.current[index + 1]?.focus();
+    }
+  };
 
   const onSubmit = async (values: any) => {
+    console.log('newPin====>', newPin, 'mainOtp====>', mainOtp);
+    const arr = [];
+
     onLogin(values);
   };
+
+  useEffect(() => {
+    counter > 0 &&
+      setTimeout(() => {
+        setCounter(counter - 1);
+      }, 1000);
+  }, [counter]);
 
   return (
     <>
@@ -52,7 +87,7 @@ const OTPverification = () => {
               </Text>
             </View>
             <View style={styles.inputContainer}>
-              {[0, 1, 2, 3].map(index => (
+              {/* {[0, 1, 2, 3].map(index => (
                 <TextInput
                   key={index}
                   style={styles.otpinput}
@@ -61,14 +96,31 @@ const OTPverification = () => {
                   keyboardType="numeric"
                   maxLength={1}
                 />
+              ))} */}
+              {Array.from({length}, (_, index) => (
+                <TextInput
+                  inputMode="numeric"
+                  key={index}
+                  maxLength={1}
+                  value={OTP[index]}
+                  onChangeText={text => handleTextChange(text, index)}
+                  ref={ref => (inputRef.current[index] = ref as TextInput)}
+                  style={styles.otpinput}
+                />
               ))}
             </View>
-            <Text style={styles.donttext}>00:12 Sec</Text>
+            <Text style={styles.donttext}>00:{counter} Sec</Text>
             <Text style={styles.donttext}>
-              Don’t receive code? <Text style={styles.signupText}>Re-send</Text>
+              Don’t receive code?{' '}
+              <Pressable
+                onPress={() => {
+                  setCounter(60);
+                }}>
+                <Text style={styles.signupText}>Re-send</Text>
+              </Pressable>
             </Text>
             <View>
-              <Button text="Submit" onPress={handleSubmit(onSubmit)} />
+              <Button text="Submit" onPress={onSubmit} />
             </View>
           </View>
         </ScrollView>
@@ -137,7 +189,6 @@ const styles = StyleSheet.create({
   },
   otpinput: {
     backgroundColor: '#FF9F1C',
-    color: '#FFFFFF',
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,

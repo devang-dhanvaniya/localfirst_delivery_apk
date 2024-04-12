@@ -12,11 +12,13 @@ import {createSlice} from '@reduxjs/toolkit';
 interface InitialState {
   items: any;
   orderDetails: any;
+  deliveryDetails: any;
 }
 
 const initialState: InitialState = {
   items: {},
   orderDetails: {},
+  deliveryDetails: {},
 };
 
 const orderSlice = createSlice({
@@ -54,6 +56,12 @@ const orderSlice = createSlice({
         state.orderDetails = payload?.data || initialState.orderDetails;
       },
     );
+    builder.addMatcher(
+      orderApi.endpoints.getDeliveryPersonDetails.matchFulfilled,
+      (state, {payload}: any) => {
+        state.deliveryDetails = payload?.data || initialState.deliveryDetails;
+      },
+    );
   },
 });
 
@@ -71,4 +79,11 @@ export const selectGetOrderDetails = (state: RootState) =>
 export const useGetOrderDetails = () => {
   const orderDetails = useAppSelector(selectGetOrderDetails);
   return useMemo(() => orderDetails, [orderDetails]);
+};
+
+export const selectGetDeliveryDetails = (state: RootState) =>
+  state.order.deliveryDetails;
+export const useGetDeliveryDetails = () => {
+  const deliveryDetails = useAppSelector(selectGetDeliveryDetails);
+  return useMemo(() => deliveryDetails, [deliveryDetails]);
 };

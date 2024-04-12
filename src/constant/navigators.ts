@@ -48,3 +48,6 @@ export const COUPON = 'COUPON';
 export const COUPON_FORM = 'COUPON_FORM';
 export const STOCK_MANAGEMENT = 'STOCK_MANAGEMENT';
 export const RESET_MANAGEMENT = 'RESET_MANAGEMENT';
+
+export const HEADER = 'HEADER';
+export const PROFILE = 'PROFILE'

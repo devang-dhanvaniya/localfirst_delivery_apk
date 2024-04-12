@@ -14,10 +14,7 @@ const OrderDetails = ({route, navigation}: any) => {
   const orderId = route?.params?.id;
   const orderDetails = useGetOrderDetails();
   useGetOrderDetailsQuery(orderId);
-  console.log(
-    orderDetails?.order_item?.length,
-    'orderDetailsorderDetailsorderDetailsorderDetailsorderDetails',
-  );
+  
   const addressUser = `${orderDetails?.shipping_address?.address1}, ${orderDetails?.shipping_address?.landmark}, ${orderDetails?.shipping_address?.city}, ${orderDetails?.shipping_address?.pincode}`;
 
   const OrderDetailsBox = (item: any) => {
