@@ -2,9 +2,10 @@ import {FlatList, Pressable, StyleSheet, Text} from 'react-native';
 import React from 'react';
 
 // PROJECT IMPORT
-import { OptionTypes } from '../../features/common';
+import {OptionTypes} from '../../features/common';
 import {Colors, Common} from '../../constant';
 import {textStyles} from '../../styles';
+import {wp} from '../../commonFunctions';
 
 interface TabsProps {
   currentTab?: any;
@@ -12,7 +13,7 @@ interface TabsProps {
   options: OptionTypes[];
   valueKey?: string;
   labelKey?: string;
-  style?:any
+  style?: any;
 }
 
 const Tabs = (props: TabsProps) => {
@@ -30,7 +31,6 @@ const Tabs = (props: TabsProps) => {
       showsHorizontalScrollIndicator={false}
       data={options}
       style={style}
-      
       renderItem={({item}) => {
         return (
           <>
@@ -67,6 +67,10 @@ const styles = StyleSheet.create({
   tab: {
     borderBottomWidth: 2,
     paddingVertical: 6,
+    width: wp(25),
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   tabText: {
     marginHorizontal: 5,

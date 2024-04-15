@@ -38,7 +38,6 @@ const orderSlice = createSlice({
       orderApi.endpoints.getOrders.matchFulfilled,
       (state, action) => {
         const status = action?.meta?.arg?.originalArgs?.status;
-
         state.items = {
           ...state.items,
           ...preparePaginateData(

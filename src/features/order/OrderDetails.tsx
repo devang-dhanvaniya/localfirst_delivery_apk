@@ -14,8 +14,15 @@ const OrderDetails = ({route, navigation}: any) => {
   const orderId = route?.params?.id;
   const orderDetails = useGetOrderDetails();
   useGetOrderDetailsQuery(orderId);
-  
-  const addressUser = `${orderDetails?.shipping_address?.address1}, ${orderDetails?.shipping_address?.landmark}, ${orderDetails?.shipping_address?.city}, ${orderDetails?.shipping_address?.pincode}`;
+
+  const addressUser = [
+    orderDetails?.shipping_address?.address1 || '',
+    orderDetails?.shipping_address?.landmark || '',
+    orderDetails?.shipping_address?.city || '',
+    orderDetails?.shipping_address?.pincode || '',
+  ]
+    .filter(Boolean)
+    .join(', ');
 
   const OrderDetailsBox = (item: any) => {
     return (
@@ -81,17 +88,17 @@ const OrderDetails = ({route, navigation}: any) => {
         <View style={commonStyles.flexBetweenCenter}>
           <View
             style={[
+              styles.detailsContainer,
               commonStyles.flexAlignStart,
-              commonStyles.container,
               {gap: 10},
             ]}>
             <View>
               <Image
-                source={require('../../assets/images/product.png')}
+                source={require('../../assets/images/vendorPic.png')}
                 style={{borderRadius: 50, height: 40, width: 40}}
               />
             </View>
-            <View>
+            <View style={commonStyles.container}>
               <Text style={textStyles.dark14600}>
                 {orderDetails?.store?.store_name || ''}
               </Text>
@@ -127,12 +134,12 @@ const OrderDetails = ({route, navigation}: any) => {
         <View style={commonStyles.flexBetweenCenter}>
           <View
             style={[
+              styles.detailsContainer,
               commonStyles.flexAlignStart,
-              commonStyles.container,
               {gap: 10},
             ]}>
             <View>
-              <FastImage
+              {/* <FastImage
                 style={styles.promotionImg}
                 source={{
                   uri: prepareImageUrl(orderDetails?.store?.photo)?.uri,
@@ -140,13 +147,13 @@ const OrderDetails = ({route, navigation}: any) => {
                   priority: FastImage.priority.high,
                 }}
                 resizeMode={FastImage.resizeMode.cover}
-              />
-              {/* <Image
-                source={require('../../assets/images/product.png')}
-                style={{borderRadius: 50, height: 40, width: 40}}
               /> */}
+              <Image
+                source={require('../../assets/images/userPic.png')}
+                style={{borderRadius: 50, height: 40, width: 40}}
+              />
             </View>
-            <View>
+            <View style={commonStyles.container}>
               <Text style={textStyles.dark14600}>
                 {orderDetails?.shipping_address?.name || ''}{' '}
                 {orderDetails?.shipping_address?.lname || ''}
@@ -182,13 +189,12 @@ const OrderDetails = ({route, navigation}: any) => {
             Total Item: {orderDetails?.order_item?.length}
           </Text>
           <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-            {/* <View
+            <Text
               style={[
                 orderDetails?.payment_type === 'COD'
-                  ? styles.green
-                  : styles.yellow,
-                styles.badge,
-              ]}/> */}
+                  ? styles.badge_cod
+                  : styles.badge_ofd,
+              ]}></Text>
             <Text
               style={[
                 orderDetails?.payment_type === 'COD'
@@ -233,10 +239,18 @@ const styles = StyleSheet.create({
   pageMain: {
     padding: 10,
   },
+
   //   Dash
-  badge: {
+  badge_cod: {
     height: 6,
     width: 6,
+    backgroundColor: Colors.PRIMARY,
+    borderRadius: 50,
+  },
+  badge_ofd: {
+    height: 6,
+    width: 6,
+    backgroundColor: Colors.GREEN,
     borderRadius: 50,
   },
   spaceBox: {
@@ -264,6 +278,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderStyle: 'dashed',
     borderColor: '#EDEDED',
+  },
+  detailsContainer: {
+    paddingVertical: 10,
   },
   itemCard: {
     paddingVertical: 10,

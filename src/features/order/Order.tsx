@@ -1,26 +1,22 @@
 import {
+  Dimensions,
   Image,
   Pressable,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {useGetOrdersMutation, useUpdateOrderStatusMutation} from './orderApi';
+import React, {useEffect, useState} from 'react';
+import {useGetOrdersMutation} from './orderApi';
 import {Filter, ResToast, initialFilter, initialResToast} from '../common';
-import {useAuth} from '../../hooks';
-import {prepareResponse, seperator} from '../../commonFunctions';
+import {prepareResponse} from '../../commonFunctions';
 import {commonStyles, textStyles} from '../../styles';
-import {Button, DropdownModal, Icon, List, Tabs, Toast} from '../../ui';
-import {setOrders, useOrderItems} from './orderSlice';
+import {List, Tabs, Toast} from '../../ui';
+import {useOrderItems} from './orderSlice';
 import {Colors, Navigator} from '../../constant';
 import {orderStatusOtions} from './mock';
-import {useAppDispatch} from '../../redux/hooks';
 import {useIsFocused} from '@react-navigation/native';
-import {AnimatedFAB} from 'react-native-paper';
-import {PlusImage} from '../../ui/images/images';
 
 const ALL = 'All';
 const VALUE = 'value';
@@ -32,17 +28,12 @@ const initialLocalFilter = {
 };
 
 const Order = ({navigation}: any) => {
-  const {clearAuth} = useAuth();
-
-  const ref = useRef<any>();
-  const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
   const orderItems = useOrderItems();
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
   const [resToast, setResToast] = useState<ResToast>(initialResToast);
-  const [updateOrderStatus] = useUpdateOrderStatusMutation();
-  const [modalDeatils, setModalDetails] = useState<any>({});
+  console.log(orderItems, 'orderItemsorderItemsorderItems');
 
   const onGet = async () => {
     try {
@@ -51,51 +42,13 @@ const Order = ({navigation}: any) => {
         status: filter?.status,
       };
 
-      const rr = await getOrders(payload).unwrap();
+      await getOrders(payload).unwrap();
     } catch (err: any) {
       console.error('Err ', err);
       setResToast(prepareResponse(err?.data));
     }
   };
 
-  const onUpdateStatus = async (status: string) => {
-    try {
-      const payload = {
-        order_id: modalDeatils?.id,
-        status: status,
-      };
-      const res = await updateOrderStatus(payload).unwrap();
-      const localItems = {...orderItems};
-
-      const oldTabItems = [...(localItems?.[filter?.status] || [])];
-      const newTabItems = [...(localItems?.[status] || [])];
-
-      if (filter?.status === ALL) {
-        oldTabItems[modalDeatils?.index] = {
-          ...oldTabItems[modalDeatils?.index],
-          status: status,
-        };
-      } else {
-        oldTabItems.splice(modalDeatils?.index, 1);
-
-        const newCurrentItem =
-          localItems?.[filter?.status]?.[modalDeatils?.index];
-        newCurrentItem['status'] = status;
-        newTabItems.push(newCurrentItem);
-      }
-
-      localItems[filter?.status] = oldTabItems;
-      localItems[status] = newTabItems;
-
-      dispatch(setOrders(localItems));
-      setResToast(prepareResponse(res));
-      setModalDetails({});
-      ref.current.close();
-    } catch (err: any) {
-      setResToast(prepareResponse(err?.data));
-      console.error('Err =-=>', err);
-    }
-  };
   const prepareTabsOptions = () => {
     return [{[VALUE]: ALL, [LABEL]: ALL}, ...orderStatusOtions];
   };
@@ -131,24 +84,31 @@ const Order = ({navigation}: any) => {
             <View style={[styles.spaceBox, commonStyles.container]}>
               {item?.payment_type ? (
                 <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-                  <View style={styles.badge}></View>
-                  <Text style={textStyles.theme14700}>
+                  <Text
+                    style={[
+                      item?.payment_type === 'COD'
+                        ? styles.badge_cod
+                        : styles.badge_ofd,
+                    ]}></Text>
+                  <Text
+                    style={[
+                      item?.payment_type === 'COD'
+                        ? textStyles.theme14700
+                        : textStyles.green14700,
+                    ]}>
                     {item?.payment_type}
                   </Text>
                 </View>
               ) : null}
-              <Pressable
-                onPress={() => {
-                  setModalDetails({
-                    id: item?.id,
-                    order_id: item?.ord_id,
-                    index: item?.index,
-                    status: item?.status,
-                  });
-                  ref.current.present();
-                }}>
-                <View style={commonStyles.flexBetweenCenter}>
-                  <Text style={[textStyles.gray12600, styles.bg_initialized]}>
+              <Pressable>
+                <View
+                  style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
+                  <Text
+                    style={[
+                      item?.status === 'failed'
+                        ? styles.bg_Failed
+                        : styles.bg_Cancel,
+                    ]}>
                     {item?.status}
                   </Text>
                 </View>
@@ -166,7 +126,6 @@ const Order = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={[commonStyles.container, styles.container]}>
-      
       <View
         style={{
           paddingHorizontal: 10,
@@ -195,14 +154,6 @@ const Order = ({navigation}: any) => {
           onEndReachedThreshold={0.5}
         />
         <Toast resToast={resToast} setResToast={setResToast} />
-
-        <DropdownModal
-          refe={ref}
-          options={orderStatusOtions}
-          onChangeText={status => {
-            onUpdateStatus(status);
-          }}
-        />
       </View>
     </SafeAreaView>
   );
@@ -256,10 +207,16 @@ const styles = StyleSheet.create({
   },
 
   //   Dash
-  badge: {
+  badge_cod: {
     height: 6,
     width: 6,
     backgroundColor: Colors.PRIMARY,
+    borderRadius: 50,
+  },
+  badge_ofd: {
+    height: 6,
+    width: 6,
+    backgroundColor: Colors.GREEN,
     borderRadius: 50,
   },
   spaceBox: {
@@ -283,15 +240,23 @@ const styles = StyleSheet.create({
   },
   newcss: {
     flexDirection: 'row',
-    // justifyContent: 'space-between',
-    width: '100%',
+    width: Dimensions.get('window').width,
+    alignContent: 'center',
+    // alignItems:'center'
   },
-  bg_initialized: {
-    color: 'yellow',
-    backgroundColor: 'black',
+  bg_Failed: {
+    color: '#D34747',
+    backgroundColor: '#D2B0B0',
   },
-  bg_success: {
-    color: 'blue',
-    backgroundColor: 'black',
+  bg_Cancel: {
+    color: '#BA12C9',
+    backgroundColor: '#DEB1E2',
+    padding: 5,
+    width: 58,
+    textAlign: 'center',
+    borderRadius: 8,
+  },
+  activeStatus: {
+    borderRadius: 8,
   },
 });

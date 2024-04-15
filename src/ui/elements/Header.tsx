@@ -8,8 +8,6 @@ import navigationServices from '../../navigations/navigationServices';
 
 const Header = ({navigation}: any) => {
   const handleProfilePress = () => {
-    console.log('sdfnsdhflksdjkfhsdjlkh');
-
     navigationServices.navigate(Navigator.PROFILE);
   };
 
@@ -17,7 +15,7 @@ const Header = ({navigation}: any) => {
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <TouchableOpacity onPress={handleProfilePress}>
         <FastImage
-          source={require('../../assets/images/google.png')}
+          source={require('../../assets/images/circle-user-round.png')}
           style={{width: 30, height: 30, borderRadius: 15, marginRight: 10}}
         />
       </TouchableOpacity>

@@ -1,11 +1,11 @@
 export const orderStatusOtions = [
   {
-    value: 'Out of delivery',
-    label: 'Out of delivery',
+    value: 'cancel',
+    label: 'Cancel',
   },
   {
-    value: 'Delivered',
-    label: 'Delivered',
+    value: 'failed',
+    label: 'Failed',
   },
   // {
   //   value: 'Failed',

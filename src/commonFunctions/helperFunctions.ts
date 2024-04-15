@@ -1,7 +1,7 @@
-import { Dimensions } from 'react-native';
+import {Dimensions} from 'react-native';
 
 // PROJECT IMPORT
-import { BaseUrl, Common } from '../constant';
+import {BaseUrl, Common} from '../constant';
 
 // THIRD - PARTY IMPORT
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +33,7 @@ export const onFixed = (amount: number, decimal = Common.FIXED_DECIMAL) => {
   return +(+amount || 0)?.toFixed(decimal);
 };
 
-const initialZeroes = Array.from({ length: Common.FIXED_DECIMAL })?.reduce(
+const initialZeroes = Array.from({length: Common.FIXED_DECIMAL})?.reduce(
   t => t + '0',
   '',
 );
@@ -55,8 +55,9 @@ export const seperator = (amount: number, isRupee = true) => {
   if (isAllZeores) {
     newAmount = newAmounts?.[0];
   }
-  newAmount = `${isNagative ? '- ' : ''}${isRupee && !isNagative ? '₹ ' : ''
-    }${newAmount?.slice(1)}`;
+  newAmount = `${isNagative ? '- ' : ''}${
+    isRupee && !isNagative ? '₹ ' : ''
+  }${newAmount?.slice(1)}`;
 
   return newAmount;
 };
@@ -74,7 +75,6 @@ export const preparePaginateData = (
   dataKey = 'data',
 ) => {
   const arg = action?.meta?.arg?.originalArgs;
-
   const isInitial = +arg?.page_no === 1;
 
   const newItems = isInitial
@@ -85,34 +85,36 @@ export const preparePaginateData = (
     const index = +arg?.page_no * +arg?.limit - +arg?.limit;
     newItems.splice(index, arg?.limit, ...(action?.payload?.data || []));
   }
+  // console.log('itemsitemsitemsitems==>', items);
+  // console.log('newItems==>', newItems);
 
   return action?.payload
-    ? { ...(items || {}), [dataKey]: newItems }
+    ? {...(items || {}), [dataKey]: newItems}
     : {
-      ...(initialItems || {}),
-      [dataKey]: [],
-    };
+        ...(initialItems || {}),
+        [dataKey]: [],
+      };
 };
 
 export const prepareResponse = (data: any) => {
   return {
     ...(data
       ? {
-        ...data,
-        message: data?.message
-          ? data?.message
-          : !data?.status
+          ...data,
+          message: data?.message
+            ? data?.message
+            : !data?.status
             ? 'Something went wrong!'
             : 'Success',
-      }
+        }
       : {}),
     isToast: true,
   };
 };
 
-export const dateFormatter = (d: any, type: any = "start"):string => {
+export const dateFormatter = (d: any, type: any = 'start'): string => {
   if (!d) {
-    return "";
+    return '';
   }
   const date = new Date(d);
   const year = date.getFullYear();
