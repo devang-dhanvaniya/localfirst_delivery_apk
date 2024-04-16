@@ -7,8 +7,13 @@ import {Icon, Text} from '../../ui';
 // PROJECT IMPORT
 import {commonStyles, textStyles} from '../../styles';
 import {Colors} from '../../constant';
+import {useGetNotificationQuery} from '../order/orderApi';
+import {useNotifictionList} from '../order/orderSlice';
 
 const Notification = () => {
+  useGetNotificationQuery(undefined, {refetchOnMountOrArgChange: true});
+  const notificationList = useNotifictionList();
+
   return (
     <View style={styles.mainbox}>
       <ScrollView>

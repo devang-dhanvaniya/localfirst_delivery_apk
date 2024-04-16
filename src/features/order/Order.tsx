@@ -1,6 +1,7 @@
 import {
   Dimensions,
   Image,
+  Platform,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -10,13 +11,14 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useGetOrdersMutation} from './orderApi';
 import {Filter, ResToast, initialFilter, initialResToast} from '../common';
-import {prepareResponse} from '../../commonFunctions';
+import {prepareResponse, wp} from '../../commonFunctions';
 import {commonStyles, textStyles} from '../../styles';
 import {List, Tabs, Toast} from '../../ui';
 import {useOrderItems} from './orderSlice';
 import {Colors, Navigator} from '../../constant';
 import {orderStatusOtions} from './mock';
 import {useIsFocused} from '@react-navigation/native';
+import {Card} from 'react-native-paper';
 
 const ALL = 'All';
 const VALUE = 'value';
@@ -33,7 +35,7 @@ const Order = ({navigation}: any) => {
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
   const [resToast, setResToast] = useState<ResToast>(initialResToast);
-  console.log(orderItems, 'orderItemsorderItemsorderItems');
+  // console.log(orderItems, 'orderItemsorderItemsorderItems');
 
   const onGet = async () => {
     try {
@@ -41,8 +43,10 @@ const Order = ({navigation}: any) => {
         ...filter,
         status: filter?.status,
       };
+      console.log(payload, 'payloadpayloadpayload');
 
-      await getOrders(payload).unwrap();
+      const res = await getOrders(payload).unwrap();
+      console.log(res, 'ressssssssssssssss');
     } catch (err: any) {
       console.error('Err ', err);
       setResToast(prepareResponse(err?.data));
@@ -55,68 +59,89 @@ const Order = ({navigation}: any) => {
 
   const OrderBox = (item: any) => {
     return (
-      <>
-        <Pressable
-          onPress={() => {
-            navigation.navigate(Navigator.ORDER_DETAILS, {
-              id: item?.id,
-            });
-          }}>
+      <Pressable
+        onPress={() => {
+          navigation.navigate(Navigator.ORDER_DETAILS, {
+            id: item?.id,
+          });
+        }}>
+        <View style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
           <View
-            style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
-            <View
-              style={[
-                commonStyles.flexBetweenCenter,
-                commonStyles.container,
-                {gap: 5},
-              ]}>
-              <View>
-                <Image
-                  source={require('../../assets/images/product.png')}
-                  style={{borderRadius: 50, height: 40, width: 40}}
-                />
-              </View>
-              <View>
-                <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
-                <Text style={textStyles.gray14400}>{item?.updated_at_ist}</Text>
-              </View>
+            style={[
+              commonStyles.flexBetweenCenter,
+              commonStyles.container,
+              {gap: 5},
+            ]}>
+            <View>
+              <Image
+                source={require('../../assets/images/product.png')}
+                style={{borderRadius: 50, height: 40, width: 40}}
+              />
             </View>
-            <View style={[styles.spaceBox, commonStyles.container]}>
-              {item?.payment_type ? (
-                <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-                  <Text
-                    style={[
-                      item?.payment_type === 'COD'
-                        ? styles.badge_cod
-                        : styles.badge_ofd,
-                    ]}></Text>
-                  <Text
-                    style={[
-                      item?.payment_type === 'COD'
-                        ? textStyles.theme14700
-                        : textStyles.green14700,
-                    ]}>
-                    {item?.payment_type}
-                  </Text>
-                </View>
-              ) : null}
-              <Pressable>
-                <View
-                  style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
-                  <Text
-                    style={[
-                      item?.status === 'failed'
-                        ? styles.bg_Failed
-                        : styles.bg_Cancel,
-                    ]}>
-                    {item?.status}
-                  </Text>
-                </View>
-              </Pressable>
+            <View>
+              <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
+              <Text style={textStyles.gray14400}>{item?.updated_at_ist}</Text>
             </View>
           </View>
-        </Pressable>
-      </>
+          <View style={[styles.spaceBox, commonStyles.container]}>
+            {item?.payment_type ? (
+              <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
+                <Text
+                  style={[
+                    item?.payment_type === 'COD'
+                      ? styles.badge_cod
+                      : styles.badge_ofd,
+                  ]}></Text>
+                <Text
+                  style={[
+                    item?.payment_type === 'COD'
+                      ? textStyles.theme14700
+                      : textStyles.green14700,
+                  ]}>
+                  {item?.payment_type}
+                </Text>
+              </View>
+            ) : null}
+            <Pressable>
+              <View
+                style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
+                <Text
+                  style={[
+                    styles.bg_status,
+                    {
+                      color:
+                        item?.status === 'failed'
+                          ? '#D34747'
+                          : item?.status === 'cancel'
+                          ? '#BA12C9'
+                          : item?.status === 'out of delivery'
+                          ? '#BA12C9'
+                          : item?.status === 'delivered'
+                          ? '#BA12C9'
+                          : item?.status === 'assign to delivered'
+                          ? '#BA12C9'
+                          : '#BA12C9',
+                      backgroundColor:
+                        item?.status === 'failed'
+                          ? '#D2B0B0'
+                          : item?.status === 'cancel'
+                          ? '#DEB1E2'
+                          : item?.status === 'out of delivery'
+                          ? '#DEB1E2'
+                          : item?.status === 'delivered'
+                          ? '#DEB1E2'
+                          : item?.status === 'assign to delivered'
+                          ? '#DEB1E2'
+                          : '#DEB1E2',
+                    },
+                  ]}>
+                  {item?.status}
+                </Text>
+              </View>
+            </Pressable>
+          </View>
+        </View>
+      </Pressable>
     );
   };
 
@@ -131,17 +156,23 @@ const Order = ({navigation}: any) => {
           paddingHorizontal: 10,
           gap: 10,
         }}>
-        <Tabs
-          style={styles.newcss}
-          currentTab={filter?.status}
-          options={prepareTabsOptions()}
-          onChange={status => {
-            setFilter({
-              ...initialFilter,
-              status,
-            });
-          }}
-        />
+        <View
+          style={{
+            alignItems: 'center',
+            width: wp(100),
+            backgroundColor: 'transparent',
+          }}>
+          <Tabs
+            currentTab={filter?.status}
+            options={prepareTabsOptions()}
+            onChange={status => {
+              setFilter({
+                ...initialFilter,
+                status,
+              });
+            }}
+          />
+        </View>
         <List
           isLoading={isLoading}
           data={orderItems?.[filter?.status] || []}
@@ -238,21 +269,9 @@ const styles = StyleSheet.create({
     color: '#3C983E',
     borderRadius: 2,
   },
-  newcss: {
-    flexDirection: 'row',
-    width: Dimensions.get('window').width,
-    alignContent: 'center',
-    // alignItems:'center'
-  },
-  bg_Failed: {
-    color: '#D34747',
-    backgroundColor: '#D2B0B0',
-  },
-  bg_Cancel: {
-    color: '#BA12C9',
-    backgroundColor: '#DEB1E2',
+  bg_status: {
     padding: 5,
-    width: 58,
+    width: 80,
     textAlign: 'center',
     borderRadius: 8,
   },

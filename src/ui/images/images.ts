@@ -9,3 +9,6 @@ export const TotalSalesImage = require('../../assets/images/MyBalance.png');
 export const TotalSalesCountImage = require('../../assets/images/Expense.png');
 export const TotalUsersImage = require('../../assets/images/TotalSaving.png');
 export const ResetPasswordImage = require('../../assets/images/Resetpassword.png');
+export const DefaultImage = require('../../assets/images/defaultImage.jpeg');
+export const EmptyWalletImage = require('../../assets/images/emptyWallet.png');
+export const MasterCardImage = require('../../assets/images/bottomDashCard.png');

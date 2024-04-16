@@ -39,4 +39,5 @@ export {default as BackArrowIcon} from './BackArrowIcon';
 export {default as ApplyPromoIcon} from './ApplyPromoIcon';
 export {default as HomeIcon} from './HomeIcon';
 
-export {default as LogoutIcon} from './LogoutIcon'
+export {default as LogoutIcon} from './LogoutIcon';
+export {default as NotificationIcon} from './NotificationIcon';

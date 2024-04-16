@@ -25,18 +25,18 @@ function App(): React.JSX.Element {
       <StatusBar translucent barStyle={'dark-content'} />
       <GestureHandlerRootView style={{flex: 1}}>
         <BottomSheetModalProvider>
-          <AuthProvider>
-            <Provider store={store}>
-              <PaperProvider>
+          <PaperProvider>
+            <AuthProvider>
+              <Provider store={store}>
                 <NavigationContainer
                   ref={navigationRef => {
                     navigationServices.setTopLevelNavigator(navigationRef);
                   }}>
                   <AppNavigator />
                 </NavigationContainer>
-              </PaperProvider>
-            </Provider>
-          </AuthProvider>
+              </Provider>
+            </AuthProvider>
+          </PaperProvider>
         </BottomSheetModalProvider>
       </GestureHandlerRootView>
     </>

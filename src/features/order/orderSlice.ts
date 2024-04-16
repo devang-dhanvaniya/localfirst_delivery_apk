@@ -10,15 +10,19 @@ import {orderApi} from './orderApi';
 import {createSlice} from '@reduxjs/toolkit';
 
 interface InitialState {
+  dashboardItems: any;
   items: any;
   orderDetails: any;
   deliveryDetails: any;
+  notifictionList: any;
 }
 
 const initialState: InitialState = {
+  dashboardItems: {},
   items: {},
   orderDetails: {},
   deliveryDetails: {},
+  notifictionList: {},
 };
 
 const orderSlice = createSlice({
@@ -37,6 +41,9 @@ const orderSlice = createSlice({
     builder.addMatcher(
       orderApi.endpoints.getOrders.matchFulfilled,
       (state, action) => {
+        // state.items = payload?.data || initialState.items;
+        // console.log(payload?.data,"payload?.datapayload?.data");
+
         const status = action?.meta?.arg?.originalArgs?.status;
         state.items = {
           ...state.items,
@@ -47,6 +54,14 @@ const orderSlice = createSlice({
             status,
           ),
         };
+      },
+    );
+    builder.addMatcher(
+      orderApi.endpoints.getDashboard.matchFulfilled,
+      (state, {payload}: any) => {
+        console.log(payload?.data, 'payload?.datapayload?.datapayload?.data');
+
+        state.dashboardItems = payload?.data || initialState.dashboardItems;
       },
     );
     builder.addMatcher(
@@ -61,11 +76,24 @@ const orderSlice = createSlice({
         state.deliveryDetails = payload?.data || initialState.deliveryDetails;
       },
     );
+    builder.addMatcher(
+      orderApi.endpoints.getNotification.matchFulfilled,
+      (state, {payload}: any) => {
+        state.notifictionList = payload?.data || initialState.notifictionList;
+      },
+    );
   },
 });
 
 export default orderSlice.reducer;
 export const {clearOrder, setOrders} = orderSlice.actions;
+
+export const selectDashboardItems = (state: RootState) =>
+  state.order.dashboardItems;
+export const useDashboardItems = () => {
+  const items = useAppSelector(selectDashboardItems);
+  return useMemo(() => items, [items]);
+};
 
 export const selectOrderItems = (state: RootState) => state.order.items;
 export const useOrderItems = () => {
@@ -85,4 +113,11 @@ export const selectGetDeliveryDetails = (state: RootState) =>
 export const useGetDeliveryDetails = () => {
   const deliveryDetails = useAppSelector(selectGetDeliveryDetails);
   return useMemo(() => deliveryDetails, [deliveryDetails]);
+};
+
+export const selectNotifictionList = (state: RootState) =>
+  state.order.notifictionList;
+export const useNotifictionList = () => {
+  const notifictionList = useAppSelector(selectNotifictionList);
+  return useMemo(() => notifictionList, [notifictionList]);
 };

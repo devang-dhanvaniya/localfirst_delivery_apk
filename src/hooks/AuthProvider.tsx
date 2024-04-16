@@ -13,11 +13,15 @@ import {
 
 // THIRD - PARTY IMPORT
 import {ActivityIndicator} from 'react-native-paper';
+import {ResToast, initialResToast} from '../features/common';
+import {Toast} from '../ui';
 
 interface AuthProviderProps extends PropsWithChildren<{}> {}
 interface AuthContextTypes {
   user: any;
   isLoading: boolean;
+  resToast: ResToast;
+  setResToast: React.Dispatch<React.SetStateAction<ResToast>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   setUser: React.Dispatch<React.SetStateAction<any>>;
   onLogin: (payload: any) => Promise<void>;
@@ -30,6 +34,7 @@ export const AuthContext = React.createContext<AuthContextTypes | null>(null);
 const AuthProvider = ({children}: AuthProviderProps) => {
   const [user, setUser] = useState<any | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [resToast, setResToast] = useState<ResToast>(initialResToast);
 
   const onLogin = async (payload: any) => {
     try {
@@ -119,12 +124,15 @@ const AuthProvider = ({children}: AuthProviderProps) => {
         value={{
           user,
           isLoading,
+          resToast,
+          setResToast,
           onLogin,
           clearAuth,
           setUser,
           setIsLoading,
           // onForgotPassword,
         }}>
+        <Toast resToast={resToast} setResToast={setResToast} />
         {children}
       </AuthContext.Provider>
     </>

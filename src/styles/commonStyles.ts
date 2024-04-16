@@ -1,5 +1,5 @@
 // commonStyles.js
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 // THIRD - PARTY IMPORT
 import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
@@ -10,6 +10,18 @@ export const commonStyles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#FFFFFF',
     padding: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.1,
+        shadowRadius: 30,
+      },
+      android: {
+        shadowOffset: {width: 0, height: 5},
+        elevation: 2,
+      },
+    }),
   },
   container: {
     flex: 1,

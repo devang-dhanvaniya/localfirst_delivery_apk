@@ -15,6 +15,10 @@ import {Button} from '../../ui';
 
 // PROJECT IMPORT
 import {useAuth} from '../../hooks';
+import {
+  updateOrderStatus,
+  useUpdateOrderStatusMutation,
+} from '../order/orderApi';
 
 type InputProps = {
   length?: number;
@@ -27,8 +31,10 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
   const [counter, setCounter] = useState(60);
   const inputRef: any = useRef<HTMLInputElement[]>(Array(length).fill(null));
   const [mainOtp, setMainOtp] = useState('1234');
+  const [updateOrderStatus] = useUpdateOrderStatusMutation();
 
   let newPin = [...OTP];
+
   const handleTextChange = (input: string, index: number) => {
     newPin[index] = input;
     setOTP(newPin);
@@ -54,7 +60,14 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
   const onSubmit = async (values: any) => {
     onLogin(values);
   };
-
+  const onStatusChange = async () => {
+    try {
+      const payload = {
+        status: 'delivered',
+      };
+      await updateOrderStatus(payload).unwrap();
+    } catch (e: any) {}
+  };
   useEffect(() => {
     counter > 0 &&
       setTimeout(() => {
@@ -168,6 +181,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     color: '#878787',
     textAlign: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   signupText: {
     color: '#FF9F1C',

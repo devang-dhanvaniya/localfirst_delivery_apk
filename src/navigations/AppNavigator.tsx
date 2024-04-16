@@ -8,6 +8,8 @@ import MainStackNavigator from './MainStackNavigator';
 // THIRD - PARTY IMPORT
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Navigator} from '../constant';
+import { View } from 'react-native';
+import { commonStyles } from '../styles';
 
 const AppNavigator = () => {
   const MainStack = createNativeStackNavigator();

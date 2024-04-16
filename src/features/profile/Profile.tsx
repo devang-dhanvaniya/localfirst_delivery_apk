@@ -19,14 +19,9 @@ const Profile = () => {
   const deliveryDetails = useGetDeliveryDetails();
   const {clearAuth} = useAuth();
 
-  console.log(
-    deliveryDetails,
-    'deliveryDetailsdeliveryDetailsdeliveryDetailsdeliveryDetails',
-  );
-
   return (
     <SafeAreaView style={[commonStyles.container, styles.container]}>
-      <Pressable
+      {/* <Pressable
         onPress={() => {
           clearAuth();
         }}>
@@ -34,7 +29,7 @@ const Profile = () => {
           <Text>Logout</Text>
           <Icon name="LogoutIcon" size={18} />
         </View>
-      </Pressable>
+      </Pressable> */}
 
       <View style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
         <View
@@ -62,16 +57,14 @@ const Profile = () => {
             </View>
           </View>
         </View>
-        <Button
-          text="Logout"
-          onPress={() => {
-            clearAuth();
-          }}
-          style={styles.logoutBtn}
-        />
       </View>
-
-      <Text>Profile</Text>
+      <Button
+        text="Logout"
+        onPress={() => {
+          clearAuth();
+        }}
+        style={styles.logoutBtn}
+      />
     </SafeAreaView>
   );
 };
@@ -81,6 +74,7 @@ export default Profile;
 const styles = StyleSheet.create({
   container: {
     gap: 10,
+    paddingVertical: 15,
   },
   logout: {
     color: 'black',
@@ -95,6 +89,7 @@ const styles = StyleSheet.create({
   },
   logoutBtn: {
     paddingHorizontal: 6,
-    paddingVertical: 5,
+    paddingVertical: 15,
+    gap: 10,
   },
 });

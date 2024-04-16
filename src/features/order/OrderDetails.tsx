@@ -14,6 +14,7 @@ const OrderDetails = ({route, navigation}: any) => {
   const orderId = route?.params?.id;
   const orderDetails = useGetOrderDetails();
   useGetOrderDetailsQuery(orderId);
+  console.log(orderDetails, 'orderDetailsorderDetails');
 
   const addressUser = [
     orderDetails?.shipping_address?.address1 || '',
@@ -25,6 +26,8 @@ const OrderDetails = ({route, navigation}: any) => {
     .join(', ');
 
   const OrderDetailsBox = (item: any) => {
+    console.log(item, '=========================');
+
     return (
       <>
         <Pressable

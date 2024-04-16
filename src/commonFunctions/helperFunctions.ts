@@ -75,6 +75,7 @@ export const preparePaginateData = (
   dataKey = 'data',
 ) => {
   const arg = action?.meta?.arg?.originalArgs;
+
   const isInitial = +arg?.page_no === 1;
 
   const newItems = isInitial
@@ -85,8 +86,6 @@ export const preparePaginateData = (
     const index = +arg?.page_no * +arg?.limit - +arg?.limit;
     newItems.splice(index, arg?.limit, ...(action?.payload?.data || []));
   }
-  // console.log('itemsitemsitemsitems==>', items);
-  // console.log('newItems==>', newItems);
 
   return action?.payload
     ? {...(items || {}), [dataKey]: newItems}

@@ -1,16 +1,24 @@
 export const orderStatusOtions = [
   {
-    value: 'cancel',
+    value: 'Cancel',
     label: 'Cancel',
   },
   {
-    value: 'failed',
+    value: 'Failed',
     label: 'Failed',
   },
-  // {
-  //   value: 'Failed',
-  //   label: 'Failed',
-  // },
+  {
+    value: 'Out of delivery',
+    label: 'Out of delivery',
+  },
+  {
+    value: 'Assign to delivery',
+    label: 'Assign to delivery',
+  },
+  {
+    value: 'Delivered',
+    label: 'Delivered',
+  },
 ];
 
 export const addressTypeOptions = [

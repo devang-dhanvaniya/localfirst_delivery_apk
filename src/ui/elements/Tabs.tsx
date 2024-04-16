@@ -65,15 +65,12 @@ const Tabs = (props: TabsProps) => {
 export default Tabs;
 const styles = StyleSheet.create({
   tab: {
+    flex: 1,
+    marginTop: 8,
     borderBottomWidth: 2,
-    paddingVertical: 6,
-    width: wp(25),
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   tabText: {
-    marginHorizontal: 5,
-    marginBottom: 5,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
   },
 });

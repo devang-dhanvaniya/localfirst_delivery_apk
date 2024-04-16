@@ -7,9 +7,12 @@ import Order from '../features/order/Order';
 // THIRD - PARTY IMPORT
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import OrderDetails from '../features/order/OrderDetails';
-import {OTPverification} from '../features';
+import {Notification, OTPverification} from '../features';
 import {Header} from '../ui';
 import {Profile} from '../features/profile';
+import Dashboard from '../features/dashboard/Dashboard';
+import {commonStyles} from '../styles';
+import {View} from 'react-native';
 
 const MainStackNavigator = () => {
   const MainStack = createNativeStackNavigator();
@@ -20,6 +23,7 @@ const MainStackNavigator = () => {
         headerShown: true,
         headerRight: () => <Header />,
       }}>
+      <MainStack.Screen name={Navigator.DASHBOARD} component={Dashboard} />
       <MainStack.Screen name={Navigator.ORDER} component={Order} />
       <MainStack.Screen
         name={Navigator.ORDER_DETAILS}
@@ -29,7 +33,18 @@ const MainStackNavigator = () => {
         name={Navigator.OTP_VERIFICATION}
         component={OTPverification}
       />
-      <MainStack.Screen name={Navigator.PROFILE} component={Profile} />
+      <MainStack.Screen
+        name={Navigator.PROFILE}
+        options={{title: 'MY PROFILE'}}
+        component={Profile}
+      />
+      <MainStack.Screen
+        name={Navigator.NOTIFICATION}
+        component={Notification}
+        options={{
+          title: 'Notification',
+        }}
+      />
     </MainStack.Navigator>
   );
 };
