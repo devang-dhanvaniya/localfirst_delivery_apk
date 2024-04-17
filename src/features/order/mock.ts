@@ -35,3 +35,10 @@ export const addressTypeOptions = [
     label: 'Other',
   },
 ];
+
+export const deliveryOptions = [
+  {
+    value: 'Out of delivery',
+    label: 'Out of delivery',
+  },
+];

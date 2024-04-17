@@ -4,23 +4,23 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {useGetOrdersMutation} from './orderApi';
+import {useGetOrdersMutation, useUpdateOrderStatusMutation} from './orderApi';
 import {Filter, ResToast, initialFilter, initialResToast} from '../common';
-import {prepareImageUrl, prepareResponse, wp} from '../../commonFunctions';
+import {prepareResponse, wp} from '../../commonFunctions';
 import {commonStyles, textStyles} from '../../styles';
-import {Icon, List, Tabs, Toast} from '../../ui';
+import {List, Tabs, Toast} from '../../ui';
 import {useOrderItems} from './orderSlice';
 import {Colors, Navigator} from '../../constant';
 import {orderStatusOtions} from './mock';
 import {useIsFocused} from '@react-navigation/native';
-import {Card} from 'react-native-paper';
-import FastImage from 'react-native-fast-image';
-import UIFastImage from '../../ui/images/UIFastImage';
+import {useAuth} from '../../hooks';
+import DeleteModal from '../common/DeleteModal';
 
 const ALL = 'All';
 const VALUE = 'value';
@@ -32,11 +32,26 @@ const initialLocalFilter = {
 };
 
 const Order = ({navigation}: any) => {
+  const {resToast, setResToast} = useAuth();
   const isFocused = useIsFocused();
   const orderItems = useOrderItems();
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
-  const [resToast, setResToast] = useState<ResToast>(initialResToast);
+  const [modalDetails, setModalDetails] = useState<any>({});
+  const [updateOrderStatus, {isLoading: updateLoading}] =
+    useUpdateOrderStatusMutation();
+
+  const onStatusChange = async () => {
+    try {
+      const payload = {
+        status: 'Out of delivery',
+        order_id: modalDetails?.id,
+      };
+      const res = await updateOrderStatus(payload).unwrap();
+      onGet();
+      setModalDetails({});
+    } catch (e: any) {}
+  };
 
   const onGet = async () => {
     try {
@@ -56,7 +71,6 @@ const Order = ({navigation}: any) => {
   };
 
   const OrderBox = (item: any) => {
-    console.log(item, 'OrderBoxOrderBoxOrderBoxOrderBoxOrderBox');
     const shippingAddressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',
@@ -65,6 +79,7 @@ const Order = ({navigation}: any) => {
     ]
       .filter(Boolean)
       .join(', ');
+
     return (
       <Pressable
         onPress={() => {
@@ -86,7 +101,7 @@ const Order = ({navigation}: any) => {
                   style={{borderRadius: 50, height: 40, width: 40}}
                 />
               </View> */}
-              <View>
+              {/* <View>
                 <UIFastImage
                   style={{height: 90, width: 50, borderRadius: 8}}
                   source={{
@@ -97,82 +112,113 @@ const Order = ({navigation}: any) => {
                   }}
                   resizeMode={FastImage.resizeMode.cover}
                 />
-              </View>
+              </View> */}
               <View style={{flex: 1}}>
-                <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
-                <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
-                  <Icon name="LocationIcon" stroke={Colors.GRAY} size={20} />
+                <View style={[commonStyles.flexBetweenCenter]}>
+                  <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
+                  <View style={[commonStyles.flexBetweenCenter]}>
+                    {item?.payment_type ? (
+                      <View
+                        style={[
+                          commonStyles.flexAlignCenter,
+                          {gap: 3, marginRight: 10},
+                        ]}>
+                        <Text
+                          style={[
+                            item?.payment_type === 'COD'
+                              ? styles.badge_cod
+                              : styles.badge_ofd,
+                          ]}></Text>
+                        <Pressable onPress={() => {}}>
+                          <Text
+                            style={[
+                              item?.payment_type === 'COD'
+                                ? textStyles.theme14700
+                                : textStyles.green14700,
+                            ]}>
+                            {item?.payment_type}
+                          </Text>
+                        </Pressable>
+                      </View>
+                    ) : null}
+                    <Pressable
+                      onPress={() => {
+                        item?.status === 'Assign to delivery'
+                          ? setModalDetails({
+                              visible: true,
+                              id: item?.id,
+                              index: item?.index,
+                            })
+                          : null;
+                        setResToast({
+                          status: true,
+                          message:
+                            'You can just change Assign to delivery status',
+                          isToast: true,
+                        });
+                      }}>
+                      <View
+                        style={[
+                          styles.activeStatus,
+                          commonStyles.flexBetweenCenter,
+                        ]}>
+                        <Text
+                          style={[
+                            styles.bg_status,
+                            {
+                              color:
+                                item?.status === 'Failed'
+                                  ? '#D34747'
+                                  : item?.status === 'Cancel'
+                                  ? '#BA12C9'
+                                  : item?.status === 'Out of delivery'
+                                  ? '#9E891A'
+                                  : item?.status === 'Delivered'
+                                  ? '#F16703'
+                                  : item?.status === 'Assign to delivery'
+                                  ? '#8532EF'
+                                  : '#BA12C9',
+                              backgroundColor:
+                                item?.status === 'Failed'
+                                  ? '#D2B0B0'
+                                  : item?.status === 'Cancel'
+                                  ? '#DEB1E2'
+                                  : item?.status === 'Out of delivery'
+                                  ? '#F9F1C8'
+                                  : item?.status === 'Delivered'
+                                  ? '#FFC69C'
+                                  : item?.status === 'Assign to delivery'
+                                  ? '#DFC7FF'
+                                  : '#D2B0B0',
+                              fontSize: 12,
+                            },
+                          ]}>
+                          {item?.status}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  </View>
+                </View>
+                <Text style={[textStyles.gray14400, {marginBottom: 10}]}>
+                  {item?.updated_at_ist}
+                </Text>
+
+                <View>
+                  <Text style={[textStyles.dark14500]}>Pickup</Text>
                   <Text style={[commonStyles.container, textStyles.gray14500]}>
                     {shippingAddressUser}
                   </Text>
                 </View>
-                <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
-                  <Icon name="LocationIcon" stroke={Colors.GRAY} size={20} />
-                  <Text style={[commonStyles.container, textStyles.gray14500]}>
-                    {shippingAddressUser}
-                  </Text>
-                </View>
-                <Text style={textStyles.gray14400}>{item?.updated_at_ist}</Text>
-              </View>
-            </View>
-            <View style={[styles.spaceBox]}>
-              {item?.payment_type ? (
-                <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-                  <Text
-                    style={[
-                      item?.payment_type === 'COD'
-                        ? styles.badge_cod
-                        : styles.badge_ofd,
-                    ]}></Text>
-                  <Pressable onPress={() => {}}>
+                {shippingAddressUser?.length ? (
+                  <View style={{marginTop: 10}}>
+                    <Text style={[textStyles.dark14500]}>Delivery</Text>
                     <Text
-                      style={[
-                        item?.payment_type === 'COD'
-                          ? textStyles.theme14700
-                          : textStyles.green14700,
-                      ]}>
-                      {item?.payment_type}
+                      style={[commonStyles.container, textStyles.gray14500]}>
+                      {shippingAddressUser}
                     </Text>
-                  </Pressable>
-                </View>
-              ) : null}
-              <Pressable>
-                <View
-                  style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
-                  <Text
-                    style={[
-                      styles.bg_status,
-                      {
-                        color:
-                          item?.status === 'Failed'
-                            ? '#D34747'
-                            : item?.status === 'Cancel'
-                            ? '#BA12C9'
-                            : item?.status === 'Out of delivery'
-                            ? '#9E891A'
-                            : item?.status === 'Delivered'
-                            ? '#F16703'
-                            : item?.status === 'Assign to delivery'
-                            ? '#8532EF'
-                            : '#BA12C9',
-                        backgroundColor:
-                          item?.status === 'Failed'
-                            ? '#D2B0B0'
-                            : item?.status === 'Cancel'
-                            ? '#DEB1E2'
-                            : item?.status === 'Out of delivery'
-                            ? '#F9F1C8'
-                            : item?.status === 'Delivered'
-                            ? '#FFC69C'
-                            : item?.status === 'Assign to delivery'
-                            ? '#DFC7FF'
-                            : '#D2B0B0',
-                      },
-                    ]}>
-                    {item?.status}
-                  </Text>
-                </View>
-              </Pressable>
+                  </View>
+                ) : null}
+              </View>
             </View>
           </View>
         </View>
@@ -185,43 +231,61 @@ const Order = ({navigation}: any) => {
   }, [filter, isFocused]);
 
   return (
-    <SafeAreaView style={[commonStyles.container, styles.container]}>
-      <View
-        style={{
-          paddingHorizontal: 10,
-          gap: 10,
-        }}>
-        <View
-          style={{
-            alignItems: 'center',
-            width: wp(100),
-            backgroundColor: 'transparent',
-          }}>
-          <Tabs
-            currentTab={filter?.status}
-            options={prepareTabsOptions()}
-            onChange={status => {
-              setFilter({
-                ...initialFilter,
-                status,
-              });
-            }}
-          />
-        </View>
-        <List
-          isLoading={isLoading}
-          data={orderItems?.[filter?.status] || []}
-          renderItem={({item, index}) => <OrderBox {...item} index={index} />}
-          showsVerticalScrollIndicator={false}
-          numColumns={1}
-          filter={filter}
-          setFilter={setFilter}
-          initialFilter={initialLocalFilter}
-          onEndReachedThreshold={0.5}
-        />
-        <Toast resToast={resToast} setResToast={setResToast} />
-      </View>
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={[commonStyles.container, styles.container]}>
+        <ScrollView>
+          <View
+            style={{
+              paddingHorizontal: 10,
+              gap: 10,
+            }}>
+            <View
+              style={{
+                alignItems: 'center',
+                width: wp(100),
+                backgroundColor: 'transparent',
+              }}>
+              <Tabs
+                currentTab={filter?.status}
+                options={prepareTabsOptions()}
+                onChange={status => {
+                  setFilter({
+                    ...initialFilter,
+                    status,
+                  });
+                }}
+              />
+            </View>
+            <List
+              isLoading={isLoading}
+              data={orderItems?.[filter?.status] || []}
+              renderItem={({item, index}) => (
+                <OrderBox {...item} index={index} />
+              )}
+              showsVerticalScrollIndicator={false}
+              numColumns={1}
+              filter={filter}
+              setFilter={setFilter}
+              initialFilter={initialLocalFilter}
+              onEndReachedThreshold={0.5}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+      <DeleteModal
+        visible={!!modalDetails?.visible}
+        title="Status Conformation"
+        doneText="Yes"
+        cancelText="No"
+        text="Are you sure you go for 'out of delivery' ?"
+        onDonePress={() => {
+          onStatusChange();
+        }}
+        onDismiss={() => {
+          setModalDetails({});
+        }}
+      />
+    </>
   );
 };
 
@@ -285,11 +349,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.GREEN,
     borderRadius: 50,
   },
-  spaceBox: {
-    flexDirection: 'column',
-    alignItems: 'flex-end',
-    gap: 4,
-  },
+
   pending: {
     backgroundColor: '#C5D9FF',
     paddingVertical: 2,
@@ -306,7 +366,6 @@ const styles = StyleSheet.create({
   },
   bg_status: {
     padding: 5,
-    width: 80,
     textAlign: 'center',
     borderRadius: 8,
   },

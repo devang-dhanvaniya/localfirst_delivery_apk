@@ -1,14 +1,14 @@
 import React, {memo} from 'react';
 import {IconProps} from './index';
 import {Path, Svg} from 'react-native-svg';
-import { Colors } from '../../constant';
+import {Colors} from '../../constant';
 
 export interface NotificationIconProps extends IconProps {}
 const NotificationIcon = (props: NotificationIconProps) => {
   const {
     pathStyles = {},
     size = 24,
-    stroke = Colors.BLACK,
+    stroke = '#888888',
     fill = 'none',
     strokeWidth = 1,
     style,

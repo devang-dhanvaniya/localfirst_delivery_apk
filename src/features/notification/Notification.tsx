@@ -2,22 +2,67 @@ import {ScrollView, StyleSheet, View, Image} from 'react-native';
 import React from 'react';
 
 // UI IMPORT
-import {Icon, Text} from '../../ui';
+import {Icon, List, Text} from '../../ui';
 
 // PROJECT IMPORT
 import {commonStyles, textStyles} from '../../styles';
 import {Colors} from '../../constant';
 import {useGetNotificationQuery} from '../order/orderApi';
 import {useNotifictionList} from '../order/orderSlice';
+import {prepareImageUrl, timeDateFormatter} from '../../commonFunctions';
+import FastImage from 'react-native-fast-image';
+import UIFastImage from '../../ui/images/UIFastImage';
 
 const Notification = () => {
   useGetNotificationQuery(undefined, {refetchOnMountOrArgChange: true});
   const notificationList = useNotifictionList();
+  console.log(notificationList, 'notificationList');
+
+  const NotificationBox = (item: any) => {
+    console.log(item, 'itemitemitemitem');
+
+    return (
+      <View style={styles.orderEditCard}>
+        <View>
+          <UIFastImage
+            style={{borderRadius: 50, height: 60, width: 60}}
+            source={prepareImageUrl(item?.image)}
+          />
+        </View>
+        <View style={commonStyles.container}>
+          <Text style={textStyles.gray14600}>
+            {item?.body}
+            {'\n'}
+            <Text style={textStyles.blue14500}>#{item?.id}</Text>  for 
+            <Text style={textStyles.dark14600}> {item?.title}</Text>
+          </Text>
+
+          <View style={styles.twoPrice}>
+            <Text style={textStyles.gray12400}>
+              {timeDateFormatter(item?.created_at_ist) || '-'}
+            </Text>
+          </View>
+        </View>
+        {/* <View>
+          <View style={styles.addRemove}>
+            <Icon name="CheckIcon" />
+            <Icon name="DeleteIcon" />
+          </View>
+        </View> */}
+      </View>
+    );
+  };
 
   return (
     <View style={styles.mainbox}>
-      <ScrollView>
-        <View>
+      <List
+        data={notificationList || []}
+        renderItem={({item, index}) => (
+          <NotificationBox {...item} index={index} />
+        )}
+        showsVerticalScrollIndicator={false}
+      />
+      {/* <View>
           <View style={[commonStyles.flexAlignCenter, {gap: 6}]}>
             <Text style={textStyles.dark14600}>New</Text>
             <View style={styles.orderNumber}>
@@ -175,8 +220,7 @@ const Notification = () => {
               </View>
             </View>
           </View>
-        </View>
-      </ScrollView>
+        </View> */}
     </View>
   );
 };

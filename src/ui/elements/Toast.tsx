@@ -2,11 +2,11 @@ import {StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
 
 // PROJECT IMPORT
-import {ResToast, initialResToast} from '../../features';
 import {Colors} from '../../constant';
 
 // THIRD - PARTY IMPORT
 import {Snackbar, SnackbarProps} from 'react-native-paper';
+import { ResToast, initialResToast } from '../../features/common';
 
 const toastVariants: any = {
   Primary: {backgroundColor: `${Colors.PRIMARY}`, color: Colors.WHITE},

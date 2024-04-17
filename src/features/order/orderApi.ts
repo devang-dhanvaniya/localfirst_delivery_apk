@@ -31,6 +31,13 @@ export const orderApi = api.injectEndpoints({
     getNotification: build.query<any, void>({
       query: () => `${BaseUrl.DELIVERY_PERSON}/notification-list`,
     }),
+    updatePaymentOrder: build.mutation<any, any>({
+      query: params => ({
+        url: `${BaseUrl.DELIVERY_PERSON}/order/update-order`,
+        body: params,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
@@ -40,7 +47,8 @@ export const {
   useGetOrderDetailsQuery,
   useGetDeliveryPersonDetailsQuery,
   useGetDashboardQuery,
-  useGetNotificationQuery
+  useGetNotificationQuery,
+  useUpdatePaymentOrderMutation,
 } = orderApi;
 
 export const {
@@ -50,6 +58,7 @@ export const {
     updateOrderStatus,
     getOrderDetails,
     getDeliveryPersonDetails,
-    getNotification
+    getNotification,
+    updatePaymentOrder,
   },
 } = orderApi;

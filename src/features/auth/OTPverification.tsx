@@ -11,28 +11,31 @@ import {
 import React, {useEffect, useRef, useState} from 'react';
 
 // UI IMPORT
-import {Button} from '../../ui';
+import {Button, UIImage} from '../../ui';
 
 // PROJECT IMPORT
 import {useAuth} from '../../hooks';
-import {
-  updateOrderStatus,
-  useUpdateOrderStatusMutation,
-} from '../order/orderApi';
+import {useUpdateOrderStatusMutation} from '../order/orderApi';
+import {Colors} from '../../constant';
+import FastImage from 'react-native-fast-image';
+import UIFastImage from '../../ui/images/UIFastImage';
 
-type InputProps = {
-  length?: number;
-  onComplete?: (pin: string) => void;
-};
+// type InputProps = {
+//   length?: number;
+//   onComplete?: (pin: string) => void;
+// };
 
-const OTPverification = ({length = 4, onComplete}: InputProps) => {
+const OTPverification = ({route}: any) => {
+  console.log(route?.params?.id, 'routerouterouterouterouteroute');
+
+  const length = 4;
   const {onLogin} = useAuth();
   const [OTP, setOTP] = useState<string[]>(Array(length).fill(''));
   const [counter, setCounter] = useState(60);
   const inputRef: any = useRef<HTMLInputElement[]>(Array(length).fill(null));
   const [mainOtp, setMainOtp] = useState('1234');
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
-
+  const [isProcessDone, setIsProcessDone] = useState(false);
   let newPin = [...OTP];
 
   const handleTextChange = (input: string, index: number) => {
@@ -45,9 +48,9 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
     if (input.length === 0 && index > 0) {
       inputRef.current[index - 1]?.focus();
     }
-    if (newPin.every(digit => digit !== '')) {
-      onComplete && onComplete(newPin?.join(''));
-    }
+    // if (newPin.every(digit => digit !== '')) {
+    //   onComplete && onComplete(newPin?.join(''));
+    // }
 
     if (
       newPin.some((digit, i) => i === index + 1 && digit === '') &&
@@ -57,17 +60,19 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
     }
   };
 
-  const onSubmit = async (values: any) => {
-    onLogin(values);
-  };
   const onStatusChange = async () => {
     try {
       const payload = {
         status: 'delivered',
+        order_id: route?.params?.id,
       };
-      await updateOrderStatus(payload).unwrap();
+      const res = await updateOrderStatus(payload).unwrap();
+      if (res) {
+        setIsProcessDone(true);
+      }
     } catch (e: any) {}
   };
+
   useEffect(() => {
     counter > 0 &&
       setTimeout(() => {
@@ -77,23 +82,24 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
 
   return (
     <>
-      <ImageBackground
-        style={styles.background}
-        source={require('../../assets/images/LoginBg.png')}>
-        <ScrollView>
-          <View style={styles.mainbox}>
-            <View style={styles.container}>
-              <Image
-                source={require('../../assets/images/otpVerification.png')}
-                style={styles.logo}
-              />
-              <Text style={styles.title}>OTP Verification</Text>
-              <Text style={styles.text}>
-                Enter the OTP sent to +91 9876543210
-              </Text>
-            </View>
-            <View style={styles.inputContainer}>
-              {/* {[0, 1, 2, 3].map(index => (
+      {!isProcessDone ? (
+        <ImageBackground
+          style={styles.background}
+          source={require('../../assets/images/LoginBg.png')}>
+          <ScrollView>
+            <View style={styles.mainbox}>
+              <View style={styles.container}>
+                <Image
+                  source={require('../../assets/images/otpVerification.png')}
+                  style={styles.logo}
+                />
+                <Text style={styles.title}>OTP Verification</Text>
+                <Text style={styles.text}>
+                  Enter the OTP sent to +91 9876543210
+                </Text>
+              </View>
+              <View style={styles.inputContainer}>
+                {/* {[0, 1, 2, 3].map(index => (
                 <TextInput
                   key={index}
                   style={styles.otpinput}
@@ -103,34 +109,41 @@ const OTPverification = ({length = 4, onComplete}: InputProps) => {
                   maxLength={1}
                 />
               ))} */}
-              {Array.from({length}, (_, index) => (
-                <TextInput
-                  inputMode="numeric"
-                  key={index}
-                  maxLength={1}
-                  value={OTP[index]}
-                  onChangeText={text => handleTextChange(text, index)}
-                  ref={ref => (inputRef.current[index] = ref as TextInput)}
-                  style={styles.otpinput}
-                />
-              ))}
+                {Array.from({length}, (_, index) => (
+                  <TextInput
+                    inputMode="numeric"
+                    key={index}
+                    maxLength={1}
+                    value={OTP[index]}
+                    onChangeText={text => handleTextChange(text, index)}
+                    ref={ref => (inputRef.current[index] = ref as TextInput)}
+                    style={styles.otpinput}
+                  />
+                ))}
+              </View>
+              <Text style={styles.donttext}>00:{counter} Sec</Text>
+              <Text style={styles.donttext}>
+                Don’t receive code?{' '}
+                <Pressable
+                  onPress={() => {
+                    setCounter(60);
+                  }}>
+                  <Text style={styles.signupText}>Re-send</Text>
+                </Pressable>
+              </Text>
+              <View>
+                <Button text="Submit" onPress={onStatusChange} />
+              </View>
             </View>
-            <Text style={styles.donttext}>00:{counter} Sec</Text>
-            <Text style={styles.donttext}>
-              Don’t receive code?{' '}
-              <Pressable
-                onPress={() => {
-                  setCounter(60);
-                }}>
-                <Text style={styles.signupText}>Re-send</Text>
-              </Pressable>
-            </Text>
-            <View>
-              <Button text="Submit" onPress={onSubmit} />
-            </View>
-          </View>
-        </ScrollView>
-      </ImageBackground>
+          </ScrollView>
+        </ImageBackground>
+      ) : (
+        <View>
+          <Image
+            source={require('../../assets/images/successGif.gif')}
+            style={{width: 100, height: 100}}></Image>
+        </View>
+      )}
     </>
   );
 };
@@ -185,7 +198,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   signupText: {
-    color: '#FF9F1C',
+    color: Colors.PRIMARY,
   },
 
   // OTP
@@ -196,13 +209,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   otpinput: {
-    backgroundColor: '#FF9F1C',
+    borderWidth: 1,
     borderRadius: 10,
     paddingHorizontal: 15,
     paddingVertical: 10,
     fontSize: 18,
     // width: 50,
+    borderColor: Colors.GRAY,
     marginHorizontal: 5,
     textAlign: 'center',
+    color: Colors.BLACK,
   },
 });

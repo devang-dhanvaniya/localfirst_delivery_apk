@@ -124,6 +124,23 @@ export const dateFormatter = (d: any, type: any = 'start'): string => {
   return `${year}-${month}-${day}`;
 };
 
+export const timeDateFormatter = (d: any, type: any = 'start'): string => {
+  if (!d) {
+    return '';
+  }
+  const date = new Date(d);
+  const formattedDate = date.toLocaleString('en-US', {
+    month: 'long', // Full month name
+    day: 'numeric', // Day of the month
+    year: 'numeric', // Full year
+    hour: 'numeric', // Hour (12-hour format)
+    minute: 'numeric', // Minute
+    hour12: true, // Use 12-hour format
+  });
+  return formattedDate;
+};
+
+
 export const wp = (percentage = 0) => {
   if (Dimensions.get('window').width > Dimensions.get('window').height) {
     return (Dimensions.get('window').height * percentage) / 100;

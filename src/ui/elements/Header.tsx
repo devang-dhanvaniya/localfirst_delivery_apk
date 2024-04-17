@@ -10,21 +10,27 @@ import {useGetNotificationQuery} from '../../features/order/orderApi';
 import {useAuth} from '../../hooks';
 import {commonStyles} from '../../styles';
 import {Text} from '../typography';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import {Colors} from 'react-native/Libraries/NewAppScreen';
 
 const Header = ({navigation}: any) => {
   const {clearAuth} = useAuth();
   const handleNotificationPress = () => {
-    navigation.navigate(Navigator.NOTIFICATION);
+    navigationServices.navigate(Navigator.NOTIFICATION);
   };
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <TouchableOpacity
         style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <View style={{flexDirection: 'row', alignItems: 'center',marginRight:10}}>
+        <View
+          style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
           <TouchableOpacity onPress={handleNotificationPress}>
-            <Icon name="NotificationIcon" stroke={Colors.GRAY} strokeWidth={2} />
+            <Icon
+              name="NotificationIcon"
+              stroke={Colors.GREEN}
+              strokeWidth={2}
+              fill={Colors.BLACK}
+            />
           </TouchableOpacity>
         </View>
         <Pressable

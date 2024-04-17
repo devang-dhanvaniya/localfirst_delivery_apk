@@ -1,4 +1,10 @@
-import {TouchableOpacity, StyleSheet, View, Pressable} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Pressable,
+  SafeAreaView,
+} from 'react-native';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 
 // UI IMPORT
@@ -8,7 +14,7 @@ import {Text} from '../typography';
 import {textStyles, commonStyles} from '../../styles';
 import {Colors, Common} from '../../constant';
 import {DropdownVatiants} from './Dropdown';
-import {OptionTypes} from '../../features/common';
+import CheckBox from './CheckBox';
 
 // THIRD - PARTY IMPORT
 import {
@@ -18,7 +24,9 @@ import {
   BottomSheetModalProps,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import CheckBox from './CheckBox';
+import {useForm} from 'react-hook-form';
+import ControlledInput from './ControlledInput';
+import {OptionTypes} from '../../features/common';
 
 export interface DropdownModalProps
   extends Omit<BottomSheetModalProps, 'children'> {
@@ -29,7 +37,9 @@ export interface DropdownModalProps
   value?: any;
   variant?: DropdownVatiants;
   refe?: any;
+  isSearch?: boolean;
   onVisible?: (e?: any) => void;
+  onHide?: (value?: any) => void;
   onChangeText?: (value: any, e?: any) => void;
 }
 const DropdownModal = (props: DropdownModalProps) => {
@@ -42,19 +52,37 @@ const DropdownModal = (props: DropdownModalProps) => {
     refe,
     valueKey = Common.OPTION_VALUE_KEY,
     labelKey = Common.OPTION_LABEL_KEY,
+    isSearch,
     onVisible,
+    onHide,
     onChangeText,
     ...rest
   } = props;
 
-  const snapPoints = useMemo(() => ['25%', '50%'], []);
+  const snapPoints = useMemo(() => ['60%', '60%'], []);
   const isMulti = variant === 'MultiSelect';
 
   const [selectedValues, setSelectedValues] = useState<any[]>([]);
 
-  const onHide = () => {
+  const {control, watch, reset} = useForm({});
+
+  const onLocalHide = () => {
     setSelectedValues([]);
+    reset();
     refe.current?.close();
+  };
+
+  const prepoareOptions = () => {
+    const search = watch('search');
+    return (
+      options?.filter(item =>
+        search
+          ? item?.[labelKey]
+              ?.toLowerCase()
+              ?.includes(watch('search')?.toLowerCase())
+          : true,
+      ) || []
+    );
   };
 
   useEffect(() => {
@@ -66,16 +94,36 @@ const DropdownModal = (props: DropdownModalProps) => {
   return (
     <BottomSheetModal
       backdropComponent={props => (
-        <BottomSheetBackdrop {...props} pressBehavior={'close'} />
+        <BottomSheetBackdrop
+          {...props}
+          pressBehavior={'close'}
+          onPress={() => {
+            reset();
+            onHide?.(value);
+          }}
+        />
       )}
       ref={refe}
       index={1}
       snapPoints={snapPoints}
+      enablePanDownToClose={true}
       {...rest}>
-      <View style={commonStyles.container}>
+      <SafeAreaView style={commonStyles.container}>
+       {isSearch ?  <ControlledInput
+          style={{
+            marginHorizontal: 10,
+          }}
+          name="search"
+          placeholder="Search"
+          control={control}
+        /> : null}
         {isMulti ? (
           <View style={styles.header}>
-            <Pressable onPress={onHide}>
+            <Pressable
+              onPress={() => {
+                onLocalHide();
+                onHide?.(value);
+              }}>
               <Text>Cancel</Text>
             </Pressable>
             <Pressable>
@@ -84,14 +132,14 @@ const DropdownModal = (props: DropdownModalProps) => {
             <Pressable
               onPress={() => {
                 onChangeText?.(selectedValues || []);
-                onHide();
+                onLocalHide();
               }}>
               <Text>Done</Text>
             </Pressable>
           </View>
         ) : null}
         <BottomSheetFlatList
-          data={options}
+          data={prepoareOptions()}
           keyboardShouldPersistTaps="never"
           keyExtractor={(_, i) => i?.toString()}
           renderItem={({item}) => {
@@ -126,7 +174,7 @@ const DropdownModal = (props: DropdownModalProps) => {
                     style={styles.mainText}
                     onPress={() => {
                       onChangeText?.(item?.[valueKey], item);
-                      onHide();
+                      onLocalHide();
                     }}>
                     <Text style={textStyles.dark14600}>{item?.[labelKey]}</Text>
                   </TouchableOpacity>
@@ -135,7 +183,7 @@ const DropdownModal = (props: DropdownModalProps) => {
             );
           }}
         />
-      </View>
+      </SafeAreaView>
     </BottomSheetModal>
   );
 };

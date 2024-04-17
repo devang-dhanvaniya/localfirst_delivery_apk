@@ -12,3 +12,4 @@ export const ResetPasswordImage = require('../../assets/images/Resetpassword.png
 export const DefaultImage = require('../../assets/images/defaultImage.jpeg');
 export const EmptyWalletImage = require('../../assets/images/emptyWallet.png');
 export const MasterCardImage = require('../../assets/images/bottomDashCard.png');
+export const SuccessGif = require('../../assets/images/successGif.gif');

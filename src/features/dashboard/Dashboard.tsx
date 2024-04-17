@@ -83,8 +83,6 @@ const Dashboard = ({navigation}: any) => {
   };
 
   const ActiveOrdersBox = (item: any) => {
-    console.log(item, 'itemitemitemitemitemitem');
-
     const addressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',
