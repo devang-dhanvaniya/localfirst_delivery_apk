@@ -11,14 +11,16 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useGetOrdersMutation} from './orderApi';
 import {Filter, ResToast, initialFilter, initialResToast} from '../common';
-import {prepareResponse, wp} from '../../commonFunctions';
+import {prepareImageUrl, prepareResponse, wp} from '../../commonFunctions';
 import {commonStyles, textStyles} from '../../styles';
-import {List, Tabs, Toast} from '../../ui';
+import {Icon, List, Tabs, Toast} from '../../ui';
 import {useOrderItems} from './orderSlice';
 import {Colors, Navigator} from '../../constant';
 import {orderStatusOtions} from './mock';
 import {useIsFocused} from '@react-navigation/native';
 import {Card} from 'react-native-paper';
+import FastImage from 'react-native-fast-image';
+import UIFastImage from '../../ui/images/UIFastImage';
 
 const ALL = 'All';
 const VALUE = 'value';
@@ -35,7 +37,6 @@ const Order = ({navigation}: any) => {
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
   const [resToast, setResToast] = useState<ResToast>(initialResToast);
-  // console.log(orderItems, 'orderItemsorderItemsorderItems');
 
   const onGet = async () => {
     try {
@@ -43,10 +44,7 @@ const Order = ({navigation}: any) => {
         ...filter,
         status: filter?.status,
       };
-      console.log(payload, 'payloadpayloadpayload');
-
       const res = await getOrders(payload).unwrap();
-      console.log(res, 'ressssssssssssssss');
     } catch (err: any) {
       console.error('Err ', err);
       setResToast(prepareResponse(err?.data));
@@ -58,6 +56,15 @@ const Order = ({navigation}: any) => {
   };
 
   const OrderBox = (item: any) => {
+    console.log(item, 'OrderBoxOrderBoxOrderBoxOrderBoxOrderBox');
+    const shippingAddressUser = [
+      item?.shipping_address?.address1 || '',
+      item?.shipping_address?.landmark || '',
+      item?.shipping_address?.city || '',
+      item?.shipping_address?.pincode || '',
+    ]
+      .filter(Boolean)
+      .join(', ');
     return (
       <Pressable
         onPress={() => {
@@ -65,80 +72,108 @@ const Order = ({navigation}: any) => {
             id: item?.id,
           });
         }}>
-        <View style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
-          <View
-            style={[
-              commonStyles.flexBetweenCenter,
-              commonStyles.container,
-              {gap: 5},
-            ]}>
-            <View>
-              <Image
-                source={require('../../assets/images/product.png')}
-                style={{borderRadius: 50, height: 40, width: 40}}
-              />
-            </View>
-            <View>
-              <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
-              <Text style={textStyles.gray14400}>{item?.updated_at_ist}</Text>
-            </View>
-          </View>
-          <View style={[styles.spaceBox, commonStyles.container]}>
-            {item?.payment_type ? (
-              <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
-                <Text
-                  style={[
-                    item?.payment_type === 'COD'
-                      ? styles.badge_cod
-                      : styles.badge_ofd,
-                  ]}></Text>
-                <Text
-                  style={[
-                    item?.payment_type === 'COD'
-                      ? textStyles.theme14700
-                      : textStyles.green14700,
-                  ]}>
-                  {item?.payment_type}
-                </Text>
+        <View style={[commonStyles.whiteCard]}>
+          <View style={[commonStyles.flexBetweenCenter]}>
+            <View
+              style={[
+                commonStyles.flexAlignCenter,
+                commonStyles.container,
+                {gap: 5},
+              ]}>
+              {/* <View>
+                <Image
+                  source={require('../../assets/images/product.png')}
+                  style={{borderRadius: 50, height: 40, width: 40}}
+                />
+              </View> */}
+              <View>
+                <UIFastImage
+                  style={{height: 90, width: 50, borderRadius: 8}}
+                  source={{
+                    uri: prepareImageUrl(item?.product?.photo?.split(',')?.[0])
+                      ?.uri,
+                    headers: {Authorization: 'someAuthtoken'},
+                    priority: FastImage.priority.high,
+                  }}
+                  resizeMode={FastImage.resizeMode.cover}
+                />
               </View>
-            ) : null}
-            <Pressable>
-              <View
-                style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
-                <Text
-                  style={[
-                    styles.bg_status,
-                    {
-                      color:
-                        item?.status === 'failed'
-                          ? '#D34747'
-                          : item?.status === 'cancel'
-                          ? '#BA12C9'
-                          : item?.status === 'out of delivery'
-                          ? '#BA12C9'
-                          : item?.status === 'delivered'
-                          ? '#BA12C9'
-                          : item?.status === 'assign to delivered'
-                          ? '#BA12C9'
-                          : '#BA12C9',
-                      backgroundColor:
-                        item?.status === 'failed'
-                          ? '#D2B0B0'
-                          : item?.status === 'cancel'
-                          ? '#DEB1E2'
-                          : item?.status === 'out of delivery'
-                          ? '#DEB1E2'
-                          : item?.status === 'delivered'
-                          ? '#DEB1E2'
-                          : item?.status === 'assign to delivered'
-                          ? '#DEB1E2'
-                          : '#DEB1E2',
-                    },
-                  ]}>
-                  {item?.status}
-                </Text>
+              <View style={{flex: 1}}>
+                <Text style={textStyles.dark14600}>{item?.ord_id}</Text>
+                <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+                  <Icon name="LocationIcon" stroke={Colors.GRAY} size={20} />
+                  <Text style={[commonStyles.container, textStyles.gray14500]}>
+                    {shippingAddressUser}
+                  </Text>
+                </View>
+                <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+                  <Icon name="LocationIcon" stroke={Colors.GRAY} size={20} />
+                  <Text style={[commonStyles.container, textStyles.gray14500]}>
+                    {shippingAddressUser}
+                  </Text>
+                </View>
+                <Text style={textStyles.gray14400}>{item?.updated_at_ist}</Text>
               </View>
-            </Pressable>
+            </View>
+            <View style={[styles.spaceBox]}>
+              {item?.payment_type ? (
+                <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
+                  <Text
+                    style={[
+                      item?.payment_type === 'COD'
+                        ? styles.badge_cod
+                        : styles.badge_ofd,
+                    ]}></Text>
+                  <Pressable onPress={() => {}}>
+                    <Text
+                      style={[
+                        item?.payment_type === 'COD'
+                          ? textStyles.theme14700
+                          : textStyles.green14700,
+                      ]}>
+                      {item?.payment_type}
+                    </Text>
+                  </Pressable>
+                </View>
+              ) : null}
+              <Pressable>
+                <View
+                  style={[styles.activeStatus, commonStyles.flexBetweenCenter]}>
+                  <Text
+                    style={[
+                      styles.bg_status,
+                      {
+                        color:
+                          item?.status === 'Failed'
+                            ? '#D34747'
+                            : item?.status === 'Cancel'
+                            ? '#BA12C9'
+                            : item?.status === 'Out of delivery'
+                            ? '#9E891A'
+                            : item?.status === 'Delivered'
+                            ? '#F16703'
+                            : item?.status === 'Assign to delivery'
+                            ? '#8532EF'
+                            : '#BA12C9',
+                        backgroundColor:
+                          item?.status === 'Failed'
+                            ? '#D2B0B0'
+                            : item?.status === 'Cancel'
+                            ? '#DEB1E2'
+                            : item?.status === 'Out of delivery'
+                            ? '#F9F1C8'
+                            : item?.status === 'Delivered'
+                            ? '#FFC69C'
+                            : item?.status === 'Assign to delivery'
+                            ? '#DFC7FF'
+                            : '#D2B0B0',
+                      },
+                    ]}>
+                    {item?.status}
+                  </Text>
+                </View>
+              </Pressable>
+            </View>
           </View>
         </View>
       </Pressable>

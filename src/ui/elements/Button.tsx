@@ -15,6 +15,8 @@ import {ActivityIndicator} from 'react-native-paper';
 
 const buttonVariants = {
   Primary: Colors.PRIMARY,
+  Secondary: Colors.SECONDARY,
+  Yellow: Colors.YELLOW,
 };
 
 type ButtonVariants = keyof typeof buttonVariants;

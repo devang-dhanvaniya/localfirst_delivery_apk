@@ -9,7 +9,7 @@ const LogoutIcon = (props: LogoutIconProps) => {
   const {
     pathStyles = {},
     size = 24,
-    stroke = Colors.SECONDRAY,
+    stroke = Colors.SECONDARY,
     fill = 'none',
     strokeWidth = 2,
     style,

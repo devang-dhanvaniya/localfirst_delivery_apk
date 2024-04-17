@@ -10,7 +10,7 @@ import {Snackbar, SnackbarProps} from 'react-native-paper';
 
 const toastVariants: any = {
   Primary: {backgroundColor: `${Colors.PRIMARY}`, color: Colors.WHITE},
-  Secondary: {backgroundColor: `${Colors.SECONDRAY}`, color: Colors.WHITE},
+  Secondary: {backgroundColor: `${Colors.SECONDARY}`, color: Colors.WHITE},
   Error: {backgroundColor: `${Colors.RED}`, color: Colors.WHITE},
 };
 

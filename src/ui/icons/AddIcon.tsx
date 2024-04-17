@@ -9,7 +9,7 @@ const AddIcon = (props: AddIconProps) => {
   const {
     pathStyles = {},
     size = 20,
-    stroke = Colors.SECONDRAY,
+    stroke = Colors.SECONDARY,
     fill = 'none',
     strokeWidth = 1.5,
     style,

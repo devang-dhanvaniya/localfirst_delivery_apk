@@ -70,64 +70,64 @@ export const textStyles = StyleSheet.create({
   gray12400: {
     fontSize: 12,
     fontWeight: '400',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray12500: {
     fontSize: 12,
     fontWeight: '500',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray12600: {
     fontSize: 12,
     fontWeight: '600',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray12700: {
     fontSize: 12,
     fontWeight: '700',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   // GRAY 14
   gray14400: {
     fontSize: 14,
     fontWeight: '400',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray14500: {
     fontSize: 14,
     fontWeight: '500',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray14600: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray14700: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   // GRAY 12
   gray16400: {
     fontSize: 16,
     fontWeight: '400',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray16500: {
     fontSize: 16,
     fontWeight: '500',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray16600: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   gray16700: {
     fontSize: 16,
     fontWeight: '700',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   // DARK 12
   dark12400: {
@@ -254,5 +254,69 @@ export const textStyles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: Colors.GREEN,
+  },
+
+  // blue 12
+  blue12400: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: Colors.BLUE,
+  },
+  blue12500: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: Colors.BLUE,
+  },
+  blue12600: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: Colors.BLUE,
+  },
+  blue12700: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: Colors.BLUE,
+  },
+  // blue 14
+  blue14400: {
+    fontSize: 14,
+    fontWeight: '400',
+    color: Colors.BLUE,
+  },
+  blue14500: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: Colors.BLUE,
+  },
+  blue14600: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: Colors.BLUE,
+  },
+  blue14700: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: Colors.BLUE,
+  },
+  // blue 16
+  blue16400: {
+    fontSize: 16,
+    fontWeight: '400',
+    color: Colors.BLUE,
+  },
+  blue16500: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: Colors.BLUE,
+  },
+  blue16600: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: Colors.BLUE,
+  },
+  blue16700: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.BLUE,
   },
 });

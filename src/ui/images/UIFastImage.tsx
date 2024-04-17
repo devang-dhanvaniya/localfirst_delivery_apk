@@ -8,14 +8,13 @@ import { DefaultImage } from './images';
 import FastImage, { FastImageProps } from 'react-native-fast-image';
 
 interface UIFastImageProps extends FastImageProps {
-  defaultImage?: ImageSourcePropType;
 }
 const UIFastImage = (props: UIFastImageProps) => {
-  const { source, defaultImage = DefaultImage, ...rest } = props;
+  const { source, defaultSource = DefaultImage, ...rest } = props;
 
   return (
     <>
-      <FastImage defaultSource={defaultImage} source={source} {...rest} />
+      <FastImage defaultSource={defaultSource} source={source} {...rest} />
     </>
   );
 };

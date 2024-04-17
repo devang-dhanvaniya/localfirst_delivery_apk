@@ -41,9 +41,6 @@ const orderSlice = createSlice({
     builder.addMatcher(
       orderApi.endpoints.getOrders.matchFulfilled,
       (state, action) => {
-        // state.items = payload?.data || initialState.items;
-        // console.log(payload?.data,"payload?.datapayload?.data");
-
         const status = action?.meta?.arg?.originalArgs?.status;
         state.items = {
           ...state.items,
@@ -59,8 +56,6 @@ const orderSlice = createSlice({
     builder.addMatcher(
       orderApi.endpoints.getDashboard.matchFulfilled,
       (state, {payload}: any) => {
-        console.log(payload?.data, 'payload?.datapayload?.datapayload?.data');
-
         state.dashboardItems = payload?.data || initialState.dashboardItems;
       },
     );

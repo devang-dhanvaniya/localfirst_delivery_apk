@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   imageBox: {
     position: 'relative',

@@ -53,6 +53,7 @@ export const commonStyles = StyleSheet.create({
   flexAlignStart: {
     flexDirection: 'row',
     alignItems: 'flex-start',
+    
   },
   flatList: {
     flexDirection: 'row',

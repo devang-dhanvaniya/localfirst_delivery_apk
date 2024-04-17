@@ -63,6 +63,8 @@ export const seperator = (amount: number, isRupee = true) => {
 };
 
 export const prepareImageUrl = (uri: string) => {
+  console.log(`${BaseUrl.BASE_URL}${BaseUrl.IMAGE_MIDDLEWARE}/${uri}`,"${BaseUrl.BASE_URL}${BaseUrl.IMAGE_MIDDLEWARE}/${uri}");
+  
   return {
     uri: `${BaseUrl.BASE_URL}${BaseUrl.IMAGE_MIDDLEWARE}/${uri}`,
   };

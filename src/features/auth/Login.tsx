@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: '600',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
 
   // INPUT
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     fontSize: 14,
 
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
     fontWeight: '500',
   },
 
@@ -194,14 +194,14 @@ const styles = StyleSheet.create({
   border: {
     flex: 1,
     height: 1,
-    backgroundColor: Colors.SECONDRAY,
+    backgroundColor: Colors.SECONDARY,
     transform: [{scaleY: 0.5}],
   },
   ortext: {
     paddingHorizontal: 10,
     fontSize: 14,
     fontWeight: '500',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
 
   // TWO IMAGE

@@ -1,16 +1,33 @@
-import {Pressable, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import {
+  ImageBackground,
+  Pressable,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {commonStyles, textStyles} from '../../styles';
 import {Colors, Navigator} from '../../constant';
 import {Button, Icon, List, UIImage} from '../../ui';
 import {prepareResponse, seperator, wp} from '../../commonFunctions';
 import {dashboardSummaryInitialItems} from './mock';
-import {useDashboardItems, useOrderItems} from '../order/orderSlice';
-import {useGetDashboardQuery, useGetOrdersMutation} from '../order/orderApi';
+import {
+  useDashboardItems,
+  useGetDeliveryDetails,
+  useOrderItems,
+} from '../order/orderSlice';
+import {
+  useGetDashboardQuery,
+  useGetDeliveryPersonDetailsQuery,
+  useGetOrdersMutation,
+} from '../order/orderApi';
 import {useAuth} from '../../hooks';
 import {useIsFocused} from '@react-navigation/native';
 import {Filter, initialFilter} from '../common';
 import FastImage from 'react-native-fast-image';
+import {LinearGradient} from 'react-native-svg';
 
 const initialLocalFilter = {
   ...initialFilter,
@@ -20,11 +37,10 @@ const initialLocalFilter = {
 const Dashboard = ({navigation}: any) => {
   const items = useDashboardItems();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
-
-  console.log(items, 'itemsitemsitemsitems');
+  useGetDeliveryPersonDetailsQuery();
+  const deliveryDetails = useGetDeliveryDetails();
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const orderItems = useOrderItems();
-  console.log(orderItems, 'orderItemsorderItems');
   const isFocused = useIsFocused();
 
   const {setResToast} = useAuth();
@@ -37,10 +53,7 @@ const Dashboard = ({navigation}: any) => {
       const payload = {
         ...filter,
       };
-      console.log(payload, 'payloadpayloadpayload');
-
-      const res = await getOrders(payload).unwrap();
-      console.log(res, 'ressssssssssssssss');
+      await getOrders(payload).unwrap();
     } catch (err: any) {
       console.error('Err ', err);
       setResToast(prepareResponse(err?.data));
@@ -70,6 +83,8 @@ const Dashboard = ({navigation}: any) => {
   };
 
   const ActiveOrdersBox = (item: any) => {
+    console.log(item, 'itemitemitemitemitemitem');
+
     const addressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',
@@ -82,6 +97,7 @@ const Dashboard = ({navigation}: any) => {
     return (
       <>
         <Pressable
+          style={{marginHorizontal: 10}}
           onPress={() => {
             navigation.navigate(Navigator.ORDER_DETAILS, {
               id: item?.id,
@@ -107,21 +123,37 @@ const Dashboard = ({navigation}: any) => {
             </Text> */}
               </View>
             </View>
-            <View
-              style={[
-                commonStyles.flexAlignCenter,
-                {gap: 5, paddingVertical: 8},
-              ]}>
-              {/* <Icon name="DashboardIcon" /> */}
-              {/* <Text style={textStyles.green14500}>Restaurant Location</Text> */}
+            <View style={[{gap: 5, paddingVertical: 8}]}>
+              <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+                <Icon name="UserIcon" stroke={Colors.GRAY} size={20} />
+                <Text style={textStyles.gray14500}>
+                  {item?.shipping_address?.name} {item?.shipping_address?.lname}
+                </Text>
+              </View>
+              {item?.shipping_address?.mob_no ? (
+                <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+                  <Icon name="CallIcon" stroke={Colors.GRAY} size={20} />
+                  <Text style={textStyles.gray14500}>
+                    {item?.shipping_address?.mob_no}
+                  </Text>
+                </View>
+              ) : null}
+              <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
+                <Icon name="LocationIcon" stroke={Colors.GRAY} size={20} />
+                <Text style={[commonStyles.container, textStyles.gray14500]}>
+                  {addressUser}
+                </Text>
+              </View>
             </View>
-            <View style={[commonStyles.flexAlignStart, {gap: 5}]}>
-              <Icon name="LocationIcon" size={20} />
-              <Text style={[commonStyles.container, textStyles.theme14500]}>
-                {addressUser}
-              </Text>
-            </View>
-            <Button text="Order Details" />
+
+            <Button
+              text="Order Details"
+              onPress={() => {
+                navigation.navigate(Navigator.ORDER_DETAILS, {
+                  id: item?.id,
+                });
+              }}
+            />
           </View>
         </Pressable>
       </>
@@ -130,62 +162,99 @@ const Dashboard = ({navigation}: any) => {
 
   return (
     <SafeAreaView style={styles.mainbox}>
-      <Pressable
-        style={{marginHorizontal: 10}}
-        onPress={() => {
-          navigation.navigate(Navigator.ORDER);
-        }}>
-        <Text style={{color: 'red'}}>Order</Text>
-      </Pressable>
-      <View style={styles.mergeCard}>
-        <View style={[commonStyles.flexBetweenCenter, styles.aboveCard]}>
-          <UIImage name="EmptyWalletImage" />
-          <Text style={{fontWeight: '600', fontSize: 16, color: Colors.WHITE}}>
-            Total Balance
-          </Text>
-        </View>
-        <View style={[commonStyles.flexBetweenCenter, styles.bottomCard]}>
-          <Text
-            style={{
-              fontSize: 16,
-              color: Colors.WHITE,
-            }}>
-            ₹ {items?.shipping_charge}
-          </Text>
-          <UIImage name="MasterCardImage" />
-        </View>
-      </View>
-
-      <List
-        data={dashboardSummaryInitialItems}
-        renderItem={({item, index}) => <Item {...item} index={index} />}
-        numColumns={2}
-        refreshControl={undefined}
-        style={{gap: 2}}
-        columnWrapperStyle={commonStyles.flatList}
-      />
-      {orderItems?.['out of delivery']?.length ? (
-        <View>
+      <ScrollView>
+        {deliveryDetails?.first_name || deliveryDetails?.last_name ? (
           <View
             style={[
-              commonStyles.flexBetweenCenter,
-              {marginBottom: 10, marginHorizontal: 10},
+              commonStyles.whiteCard,
+              commonStyles.flexAlignCenter,
+              {marginHorizontal: 10},
             ]}>
-            <Text style={textStyles.dark16600}>Active Orders</Text>
-            <Text style={textStyles.theme14500}>See all</Text>
+            <FastImage
+              source={require('../../assets/images/Profile.png')}
+              style={{width: 40, height: 40, borderRadius: 15, marginRight: 10}}
+            />
+            <View>
+              <Text
+                style={{color: Colors.BLACK, fontSize: 20, fontWeight: '700'}}>
+                Hello, {deliveryDetails?.first_name}{' '}
+                {deliveryDetails?.last_name} 👋
+              </Text>
+              <Text style={textStyles.gray12500}>
+                {deliveryDetails?.email_id}
+              </Text>
+            </View>
           </View>
-          <List
-            isLoading={isLoading}
-            data={orderItems?.['out of delivery'] || []}
-            renderItem={({item, index}) => (
-              <ActiveOrdersBox {...item} index={index} />
-            )}
-            showsVerticalScrollIndicator={false}
-            numColumns={1}
-            onEndReachedThreshold={0.5}
-          />
+        ) : null}
+
+        <View style={styles.mergeCard}>
+          <ImageBackground
+            style={styles.background}
+            source={require('../../assets/images/atmbg.png')}>
+            <View style={styles.aboveCard}>
+              <View style={commonStyles.flexBetweenCenter}>
+                <UIImage name="EmptyWalletImage" />
+                <Text
+                  style={{
+                    fontWeight: '600',
+                    fontSize: 16,
+                    color: Colors.WHITE,
+                  }}>
+                  Total Balance
+                </Text>
+              </View>
+            </View>
+          </ImageBackground>
+          <View style={[commonStyles.flexBetweenCenter, styles.bottomCard]}>
+            <Text
+              style={{
+                fontSize: 16,
+                color: Colors.WHITE,
+              }}>
+              ₹ {items?.shipping_charge}
+            </Text>
+            <UIImage name="MasterCardImage" />
+          </View>
         </View>
-      ) : null}
+        <List
+          data={dashboardSummaryInitialItems}
+          renderItem={({item, index}) => <Item {...item} index={index} />}
+          numColumns={2}
+          refreshControl={undefined}
+          style={{gap: 2}}
+          scrollEnabled={false}
+          columnWrapperStyle={commonStyles.flatList}
+        />
+        <View>
+          {orderItems?.['out of delivery']?.length ? (
+            <View>
+              <View
+                style={[
+                  commonStyles.flexBetweenCenter,
+                  {marginBottom: 10, marginHorizontal: 10},
+                ]}>
+                <Text style={textStyles.gray16400}>Active Orders</Text>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate(Navigator.ORDER);
+                  }}>
+                  <Text style={textStyles.theme14500}>See all</Text>
+                </Pressable>
+              </View>
+              <List
+                isLoading={isLoading}
+                data={orderItems?.['out of delivery'] || []}
+                renderItem={({item, index}) => (
+                  <ActiveOrdersBox {...item} index={index} />
+                )}
+                showsVerticalScrollIndicator={false}
+                numColumns={1}
+                onEndReachedThreshold={0.5}
+              />
+            </View>
+          ) : null}
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -216,7 +285,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 14,
     fontWeight: '400',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
     paddingBottom: 5,
   },
   value: {
@@ -247,7 +316,7 @@ const styles = StyleSheet.create({
   saleText: {
     fontSize: 12,
     fontWeight: '400',
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   salePer: {
     fontSize: 16,
@@ -269,19 +338,25 @@ const styles = StyleSheet.create({
   },
   mergeCard: {
     marginHorizontal: 10,
+    borderRadius: 20,
+    overflow: 'hidden',
   },
   aboveCard: {
-    backgroundColor: Colors.PRIMARY,
+    // backgroundColor: '#ff9f1c',
     paddingHorizontal: 10,
     paddingTop: 20,
     paddingBottom: 60,
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
   },
   bottomCard: {
     padding: 20,
-    borderBottomRightRadius: 10,
-    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 20,
     backgroundColor: '#2EC4B6',
+  },
+  background: {
+    width: '100%',
+    resizeMode: 'cover',
   },
 });

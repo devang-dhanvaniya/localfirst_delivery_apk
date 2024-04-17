@@ -8,7 +8,7 @@ const EyeOffIcon = (props: EyeOffIconProps) => {
   const {
     pathStyles = {},
     size = 20,
-    stroke = Colors.SECONDRAY,
+    stroke = Colors.SECONDARY,
     fill = 'none',
     strokeWidth = 2,
     style,

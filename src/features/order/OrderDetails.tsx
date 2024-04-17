@@ -14,8 +14,6 @@ const OrderDetails = ({route, navigation}: any) => {
   const orderId = route?.params?.id;
   const orderDetails = useGetOrderDetails();
   useGetOrderDetailsQuery(orderId);
-  console.log(orderDetails, 'orderDetailsorderDetails');
-
   const addressUser = [
     orderDetails?.shipping_address?.address1 || '',
     orderDetails?.shipping_address?.landmark || '',
@@ -26,8 +24,6 @@ const OrderDetails = ({route, navigation}: any) => {
     .join(', ');
 
   const OrderDetailsBox = (item: any) => {
-    console.log(item, '=========================');
-
     return (
       <>
         <Pressable
@@ -36,8 +32,7 @@ const OrderDetails = ({route, navigation}: any) => {
               id: item?.id,
             });
           }}>
-          <View
-            style={[commonStyles.flexBetweenCenter, commonStyles.whiteCard]}>
+          <View style={[commonStyles.flexBetweenCenter, styles.productCard]}>
             <View
               style={[
                 commonStyles.flexBetweenCenter,
@@ -46,7 +41,7 @@ const OrderDetails = ({route, navigation}: any) => {
               ]}>
               <View>
                 <FastImage
-                  style={{height: 90, width: 50}}
+                  style={{height: 90, width: 50, borderRadius: 8}}
                   source={{
                     uri: prepareImageUrl(item?.product?.photo?.split(',')?.[0])
                       ?.uri,
@@ -115,13 +110,13 @@ const OrderDetails = ({route, navigation}: any) => {
               <Icon
                 name="CallIcon"
                 pathStyles={{
-                  1: {fill: Colors.SECONDRAY},
+                  1: {fill: Colors.SECONDARY},
                 }}
               />
               <Icon
                 name="ChatIcon"
                 pathStyles={{
-                  1: {fill: Colors.SECONDRAY},
+                  1: {fill: Colors.SECONDARY},
                 }}
               />
             </View>
@@ -169,13 +164,13 @@ const OrderDetails = ({route, navigation}: any) => {
               <Icon
                 name="CallIcon"
                 pathStyles={{
-                  1: {fill: Colors.SECONDRAY},
+                  1: {fill: Colors.SECONDARY},
                 }}
               />
               <Icon
                 name="ChatIcon"
                 pathStyles={{
-                  1: {fill: Colors.SECONDRAY},
+                  1: {fill: Colors.SECONDARY},
                 }}
               />
             </View>
@@ -187,7 +182,11 @@ const OrderDetails = ({route, navigation}: any) => {
         <View style={styles.orderFirstsec}>
           <Text style={textStyles.dark14600}>Item details</Text>
         </View>
-        <View style={[commonStyles.flexBetweenCenter, {paddingTop: 8}]}>
+        <View
+          style={[
+            commonStyles.flexBetweenCenter,
+            {paddingTop: 8, marginBottom: 10},
+          ]}>
           <Text style={textStyles.theme12600}>
             Total Item: {orderDetails?.order_item?.length}
           </Text>
@@ -308,5 +307,11 @@ const styles = StyleSheet.create({
   },
   yellow: {
     color: 'orange',
+  },
+  productCard: {
+    borderColor: '#f1f1f1',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 5,
   },
 });

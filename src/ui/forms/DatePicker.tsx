@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
-    backgroundColor: Colors.SECONDRAY,
+    backgroundColor: Colors.SECONDARY,
   },
   datePicker: {
     width: wp(100),

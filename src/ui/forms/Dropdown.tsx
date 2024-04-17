@@ -110,7 +110,7 @@ const Dropdown = (props: DropdownProps) => {
             <Text
               style={[
                 styles.text,
-                {color: prepareIsValue() ? Colors.BLACK : Colors.SECONDRAY},
+                {color: prepareIsValue() ? Colors.BLACK : Colors.SECONDARY},
               ]}>
               {prepareIsValue() ? prepareLabel() : placeholder}
             </Text>

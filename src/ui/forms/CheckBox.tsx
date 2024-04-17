@@ -8,7 +8,7 @@ import C, {CheckBoxProps as CProps} from '@react-native-community/checkbox';
 
 const variants = {
   Primary: Colors.PRIMARY,
-  Secondary: Colors.SECONDRAY,
+  Secondary: Colors.SECONDARY,
 };
 
 export type Variants = keyof typeof variants;

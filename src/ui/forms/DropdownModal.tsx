@@ -8,7 +8,7 @@ import {Text} from '../typography';
 import {textStyles, commonStyles} from '../../styles';
 import {Colors, Common} from '../../constant';
 import {DropdownVatiants} from './Dropdown';
-import { OptionTypes } from '../../features/common';
+import {OptionTypes} from '../../features/common';
 
 // THIRD - PARTY IMPORT
 import {
@@ -29,8 +29,8 @@ export interface DropdownModalProps
   value?: any;
   variant?: DropdownVatiants;
   refe?: any;
-  onVisible?:(e?:any) => void;
-  onChangeText?: (value: any,e?:any) => void;
+  onVisible?: (e?: any) => void;
+  onChangeText?: (value: any, e?: any) => void;
 }
 const DropdownModal = (props: DropdownModalProps) => {
   const {
@@ -62,7 +62,6 @@ const DropdownModal = (props: DropdownModalProps) => {
       setSelectedValues(value || []);
     }
   }, [value]);
-
 
   return (
     <BottomSheetModal
@@ -126,7 +125,7 @@ const DropdownModal = (props: DropdownModalProps) => {
                   <TouchableOpacity
                     style={styles.mainText}
                     onPress={() => {
-                      onChangeText?.(item?.[valueKey],item);
+                      onChangeText?.(item?.[valueKey], item);
                       onHide();
                     }}>
                     <Text style={textStyles.dark14600}>{item?.[labelKey]}</Text>
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   text: {
-    color: Colors.SECONDRAY,
+    color: Colors.SECONDARY,
   },
   header: {
     flexDirection: 'row',
