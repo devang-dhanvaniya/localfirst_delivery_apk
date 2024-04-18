@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  Platform,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -10,7 +11,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {commonStyles, textStyles} from '../../styles';
 import {Colors, Navigator} from '../../constant';
-import {Button, Icon, List, UIImage} from '../../ui';
+import {Button, Icon, List, Loader, UIImage} from '../../ui';
 import {prepareResponse, seperator, wp} from '../../commonFunctions';
 import {dashboardSummaryInitialItems} from './mock';
 import {
@@ -37,14 +38,14 @@ const initialLocalFilter = {
 const Dashboard = ({navigation}: any) => {
   const items = useDashboardItems();
   const [filter, setFilter] = useState<Filter>(initialLocalFilter);
-  useGetDeliveryPersonDetailsQuery();
+  const {isLoading: isDelivery} = useGetDeliveryPersonDetailsQuery();
   const deliveryDetails = useGetDeliveryDetails();
   const [getOrders, {isLoading}] = useGetOrdersMutation();
   const orderItems = useOrderItems();
   const isFocused = useIsFocused();
 
   const {setResToast} = useAuth();
-  useGetDashboardQuery(undefined, {
+  const {isLoading: isDashboardLoading} = useGetDashboardQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -64,21 +65,42 @@ const Dashboard = ({navigation}: any) => {
     onGet();
   }, [isFocused]);
 
-  const Item = (item: any, index: any) => {
+  const Item = (item: any) => {
     return (
-      <View style={styles.summaryMainBox}>
-        <View style={[styles.summaryBox, {backgroundColor: item.background}]}>
-          <View>
-            <Icon name={item.image} />
-          </View>
-          <View>
-            <Text style={styles.heading}>{item.heading}</Text>
-            <Text style={styles.value}>
-              {seperator(+[items?.[item?.keys]], item?.isRupee)}
-            </Text>
+      <>
+        <View style={[commonStyles.whiteCard, styles.pageBox]}>
+          <View
+            style={[
+              commonStyles.flexBetweenCenter,
+              {
+                gap: 5,
+              },
+            ]}>
+            <View style={[commonStyles.flexAlignCenter, {gap: 5}]}>
+              <Icon name={item?.image} />
+              <View>
+                <Text style={textStyles.gray14600}>{item.heading}</Text>
+                <Text style={styles.value}>
+                  {seperator(+[items?.[item?.keys]], item?.isRupee)}
+                </Text>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
+        {/* <View style={styles.summaryMainBox}>
+          <View style={[styles.summaryBox, {backgroundColor: item.background}]}>
+            <View>
+              <Icon name={item.image} />
+            </View>
+            <View>
+              <Text style={styles.heading}>{item.heading}</Text>
+              <Text style={styles.value}>
+                {seperator(+[items?.[item?.keys]], item?.isRupee)}
+              </Text>
+            </View>
+          </View>
+        </View> */}
+      </>
     );
   };
 
@@ -207,6 +229,7 @@ const Dashboard = ({navigation}: any) => {
             <Text
               style={{
                 fontSize: 16,
+                fontWeight:'700',
                 color: Colors.WHITE,
               }}>
               ₹ {items?.shipping_charge}
@@ -214,6 +237,7 @@ const Dashboard = ({navigation}: any) => {
             <UIImage name="MasterCardImage" />
           </View>
         </View>
+
         <List
           data={dashboardSummaryInitialItems}
           renderItem={({item, index}) => <Item {...item} index={index} />}
@@ -223,6 +247,13 @@ const Dashboard = ({navigation}: any) => {
           scrollEnabled={false}
           columnWrapperStyle={commonStyles.flatList}
         />
+        <View style={{marginHorizontal: 10}}>
+          <Button
+            text="All Orders"
+            onPress={() => {
+              navigation.navigate(Navigator.ORDER);
+            }}></Button>
+        </View>
         <View>
           {orderItems?.['out of delivery']?.length ? (
             <View>
@@ -253,6 +284,7 @@ const Dashboard = ({navigation}: any) => {
           ) : null}
         </View>
       </ScrollView>
+      <Loader visible={!!(isDelivery || isLoading || isDashboardLoading)} />
     </SafeAreaView>
   );
 };
@@ -338,6 +370,18 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 20,
     overflow: 'hidden',
+    marginBottom: 20,
+    ...Platform.select({
+      ios: {
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.1,
+        shadowRadius: 30,
+      },
+      android: {
+        shadowOffset: {width: 0, height: 5},
+        elevation: 10,
+      },
+    }),
   },
   aboveCard: {
     // backgroundColor: '#ff9f1c',
@@ -356,5 +400,10 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     resizeMode: 'cover',
+  },
+  pageBox: {
+    width: wp(46),
+    marginBottom: 0,
+    backgroundColor: '#F9EBEA',
   },
 });

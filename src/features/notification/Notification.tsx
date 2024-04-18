@@ -1,8 +1,8 @@
-import {ScrollView, StyleSheet, View, Image} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React from 'react';
 
 // UI IMPORT
-import {Icon, List, Text} from '../../ui';
+import {List, Loader, Text} from '../../ui';
 
 // PROJECT IMPORT
 import {commonStyles, textStyles} from '../../styles';
@@ -10,17 +10,15 @@ import {Colors} from '../../constant';
 import {useGetNotificationQuery} from '../order/orderApi';
 import {useNotifictionList} from '../order/orderSlice';
 import {prepareImageUrl, timeDateFormatter} from '../../commonFunctions';
-import FastImage from 'react-native-fast-image';
 import UIFastImage from '../../ui/images/UIFastImage';
 
 const Notification = () => {
-  useGetNotificationQuery(undefined, {refetchOnMountOrArgChange: true});
+  const {isLoading} = useGetNotificationQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
   const notificationList = useNotifictionList();
-  console.log(notificationList, 'notificationList');
 
   const NotificationBox = (item: any) => {
-    console.log(item, 'itemitemitemitem');
-
     return (
       <View style={styles.orderEditCard}>
         <View>
@@ -54,15 +52,16 @@ const Notification = () => {
   };
 
   return (
-    <View style={styles.mainbox}>
-      <List
-        data={notificationList || []}
-        renderItem={({item, index}) => (
-          <NotificationBox {...item} index={index} />
-        )}
-        showsVerticalScrollIndicator={false}
-      />
-      {/* <View>
+    <>
+      <View style={styles.mainbox}>
+        <List
+          data={notificationList || []}
+          renderItem={({item, index}) => (
+            <NotificationBox {...item} index={index} />
+          )}
+          showsVerticalScrollIndicator={false}
+        />
+        {/* <View>
           <View style={[commonStyles.flexAlignCenter, {gap: 6}]}>
             <Text style={textStyles.dark14600}>New</Text>
             <View style={styles.orderNumber}>
@@ -221,7 +220,9 @@ const Notification = () => {
             </View>
           </View>
         </View> */}
-    </View>
+      </View>
+      <Loader visible={isLoading} />
+    </>
   );
 };
 
@@ -230,7 +231,7 @@ export default Notification;
 const styles = StyleSheet.create({
   mainbox: {
     flex: 1,
-    paddingVertical: 50,
+    paddingVertical: 14,
     paddingHorizontal: 20,
     backgroundColor: '#f3f5f9',
   },

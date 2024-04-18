@@ -38,10 +38,6 @@ const Login = ({navigation}: any) => {
     formState: {errors},
   } = useForm({
     resolver: yupResolver<any>(schema),
-    defaultValues: {
-      email_id: 'nensi@gmail.com',
-      password: '6A3iItdI97ShiwY',
-    },
   });
 
   const onSubmit = async (values: any) => {
@@ -113,8 +109,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
     resizeMode: 'cover',
-    flexDirection:'row',
-    alignItems:'center',   
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   mainbox: {
     padding: 28,

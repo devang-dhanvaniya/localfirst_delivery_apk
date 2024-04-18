@@ -1,20 +1,37 @@
-import { StyleSheet, ImageSourcePropType } from 'react-native';
+import {
+  StyleSheet,
+  ImageSourcePropType,
+  Image,
+  StyleProp,
+  ImageStyle,
+} from 'react-native';
 import React from 'react';
 
 // PROJECT IMPORT
-import { DefaultImage } from './images';
+import {DefaultImage} from './images';
 
 // THIRD - PARTY IMPORT
-import FastImage, { FastImageProps } from 'react-native-fast-image';
+import FastImage, {FastImageProps} from 'react-native-fast-image';
 
-interface UIFastImageProps extends FastImageProps {
+interface UIFastImageProps extends Omit<FastImageProps, 'source'> {
+  source: any;
 }
 const UIFastImage = (props: UIFastImageProps) => {
-  const { source, defaultSource = DefaultImage, ...rest } = props;
+  const {source, defaultSource = DefaultImage, ...rest} = props;
+  console.log(source, 'sourcesourcesource');
 
   return (
     <>
-      <FastImage defaultSource={defaultSource} source={source} {...rest} />
+      {source?.uri ? (
+        <FastImage
+          defaultSource={defaultSource}
+          source={source}
+          // style={style}
+          {...rest}
+        />
+      ) : (
+        <FastImage source={DefaultImage} {...rest} />
+      )}
     </>
   );
 };

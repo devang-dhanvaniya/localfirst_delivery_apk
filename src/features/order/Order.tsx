@@ -70,7 +70,7 @@ const Order = ({navigation}: any) => {
     return [{[VALUE]: ALL, [LABEL]: ALL}, ...orderStatusOtions];
   };
 
-  const OrderBox = (item: any) => {
+  const OrderBox = (item: any) => {  
     const shippingAddressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',
@@ -203,12 +203,15 @@ const Order = ({navigation}: any) => {
                   {item?.updated_at_ist}
                 </Text>
 
-                <View>
-                  <Text style={[textStyles.dark14500]}>Pickup</Text>
-                  <Text style={[commonStyles.container, textStyles.gray14500]}>
-                    {shippingAddressUser}
-                  </Text>
-                </View>
+                {item?.vendor?.store_settings?.pickup_address ? (
+                  <View>
+                    <Text style={[textStyles.dark14500]}>Pickup</Text>
+                    <Text
+                      style={[commonStyles.container, textStyles.gray14500]}>
+                      {item?.vendor?.store_settings?.pickup_address}
+                    </Text>
+                  </View>
+                ) : null}
                 {shippingAddressUser?.length ? (
                   <View style={{marginTop: 10}}>
                     <Text style={[textStyles.dark14500]}>Delivery</Text>

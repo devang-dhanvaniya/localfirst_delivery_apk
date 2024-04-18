@@ -65,7 +65,8 @@ const Input = (props: InputProps) => {
           />
         ) : null}
         <TextInput
-          secureTextEntry={variant === 'Password' ? secureTextEntry : false}          style={[
+          secureTextEntry={variant === 'Password' ? secureTextEntry : false}
+          style={[
             styles.input,
             {
               borderColor: message ? Colors.RED : Colors.GRAY,

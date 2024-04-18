@@ -1,28 +1,26 @@
 import React from 'react';
 import {View, TouchableOpacity, Pressable} from 'react-native';
 import {StyleSheet} from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {Navigator} from '../../constant';
 import navigationServices from '../../navigations/navigationServices';
 import {Icon} from '../icons';
-import {useNotifictionList} from '../../features/order/orderSlice';
-import {useGetNotificationQuery} from '../../features/order/orderApi';
 import {useAuth} from '../../hooks';
 import {commonStyles} from '../../styles';
-import {Text} from '../typography';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import { useRoute } from '@react-navigation/native';
 
-const Header = ({navigation}: any) => {
+const Header = () => {
   const {clearAuth} = useAuth();
   const handleNotificationPress = () => {
     navigationServices.navigate(Navigator.NOTIFICATION);
   };
+  const route =  useRoute()
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <TouchableOpacity
         style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <View
+        {route?.name === 'DASHBOARD' ? <View
           style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
           <TouchableOpacity onPress={handleNotificationPress}>
             <Icon
@@ -32,7 +30,7 @@ const Header = ({navigation}: any) => {
               fill={Colors.BLACK}
             />
           </TouchableOpacity>
-        </View>
+        </View> : null}
         <Pressable
           onPress={() => {
             clearAuth();

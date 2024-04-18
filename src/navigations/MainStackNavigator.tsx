@@ -23,19 +23,25 @@ const MainStackNavigator = () => {
         headerShown: true,
         headerRight: () => <Header />,
       }}>
-      <MainStack.Screen name={Navigator.DASHBOARD} component={Dashboard} />
-      <MainStack.Screen name={Navigator.ORDER} component={Order} />
+      <MainStack.Screen
+        name={Navigator.DASHBOARD}
+        options={{title:'Dashboard'}}
+        component={Dashboard}
+      />
+      <MainStack.Screen name={Navigator.ORDER} options={{title:'Orders'}} component={Order} />
       <MainStack.Screen
         name={Navigator.ORDER_DETAILS}
+        options={{title:'Order Details'}}
         component={OrderDetails}
       />
       <MainStack.Screen
         name={Navigator.OTP_VERIFICATION}
+        options={{title:'Otp Verification'}}
         component={OTPverification}
       />
       <MainStack.Screen
         name={Navigator.PROFILE}
-        options={{title: 'MY PROFILE'}}
+        options={{title: 'My Profile'}}
         component={Profile}
       />
       <MainStack.Screen

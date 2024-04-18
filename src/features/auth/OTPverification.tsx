@@ -26,10 +26,7 @@ import UIFastImage from '../../ui/images/UIFastImage';
 // };
 
 const OTPverification = ({route}: any) => {
-  console.log(route?.params?.id, 'routerouterouterouterouteroute');
-
   const length = 4;
-  const {onLogin} = useAuth();
   const [OTP, setOTP] = useState<string[]>(Array(length).fill(''));
   const [counter, setCounter] = useState(60);
   const inputRef: any = useRef<HTMLInputElement[]>(Array(length).fill(null));
@@ -37,6 +34,7 @@ const OTPverification = ({route}: any) => {
   const [updateOrderStatus] = useUpdateOrderStatusMutation();
   const [isProcessDone, setIsProcessDone] = useState(false);
   let newPin = [...OTP];
+  console.log(isProcessDone, 'isProcessDoneisProcessDoneisProcessDone');
 
   const handleTextChange = (input: string, index: number) => {
     newPin[index] = input;
@@ -140,8 +138,12 @@ const OTPverification = ({route}: any) => {
       ) : (
         <View>
           <Image
+            style={{width: 100, height: 100,borderWidth:2}}
             source={require('../../assets/images/successGif.gif')}
-            style={{width: 100, height: 100}}></Image>
+            >
+
+            </Image>
+            <Text style={{color:'red',borderWidth:2}}>hhfsdhfsdjkhfjksdhf</Text>
         </View>
       )}
     </>

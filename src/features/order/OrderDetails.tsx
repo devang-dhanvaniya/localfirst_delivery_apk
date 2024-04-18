@@ -10,7 +10,7 @@ import {
 import React, {useRef, useState} from 'react';
 import {commonStyles, textStyles} from '../../styles';
 import {Colors, Navigator} from '../../constant';
-import {Button, List, UIImage, UIModal} from '../../ui';
+import {Button, List, Loader, UIImage, UIModal} from '../../ui';
 import {
   useGetOrderDetailsQuery,
   useUpdatePaymentOrderMutation,
@@ -21,15 +21,19 @@ import {prepareImageUrl} from '../../commonFunctions';
 import FastImage from 'react-native-fast-image';
 import DeleteModal from '../common/DeleteModal';
 import {RadioButton} from 'react-native-paper';
+import {useAuth} from '../../hooks';
 
 const OrderDetails = ({route, navigation}: any) => {
+  const {resToast, setResToast} = useAuth();
   const ref = useRef<any>();
   const orderId = route?.params?.id;
   const orderDetails = useGetOrderDetails();
   const [modalDetails, setModalDetails] = useState<any>({});
   const [checked, setChecked] = React.useState('cash');
   const [updatePaymentOrder] = useUpdatePaymentOrderMutation();
-  useGetOrderDetailsQuery(orderId);
+  const {isLoading} = useGetOrderDetailsQuery(orderId);
+
+  console.log(orderDetails, 'orderDetails');
 
   const addressUser = [
     orderDetails?.shipping_address?.address1 || '',
@@ -49,8 +53,8 @@ const OrderDetails = ({route, navigation}: any) => {
 
       const res = await updatePaymentOrder(payload).unwrap();
       if (res) {
-        navigation.navigate(Navigator.OTP_VERIFICATION,{
-          id:orderDetails?.id
+        navigation.navigate(Navigator.OTP_VERIFICATION, {
+          id: orderDetails?.id,
         });
         setModalDetails({});
       }
@@ -213,8 +217,64 @@ const OrderDetails = ({route, navigation}: any) => {
             </View>
             {/* Restaurant Detail */}
             <View style={commonStyles.whiteCard}>
-              <View style={styles.orderFirstsec}>
+              <View
+                style={[styles.orderFirstsec, commonStyles.flexBetweenCenter]}>
                 <Text style={textStyles.dark14600}>Item details</Text>
+                <Pressable
+                  onPress={() => {
+                    orderDetails?.status === 'Assign to delivery'
+                      ? setModalDetails({
+                          visible: true,
+                          id: orderDetails?.id,
+                          index: orderDetails?.index,
+                        })
+                      : null;
+                    setResToast({
+                      status: true,
+                      message: 'You can just change Assign to delivery status',
+                      isToast: true,
+                    });
+                  }}>
+                  <View
+                    style={[
+                      styles.activeStatus,
+                      commonStyles.flexBetweenCenter,
+                    ]}>
+                    <Text
+                      style={[
+                        styles.bg_status,
+                        {
+                          color:
+                            orderDetails?.status === 'Failed'
+                              ? '#D34747'
+                              : orderDetails?.status === 'Cancel'
+                              ? '#BA12C9'
+                              : orderDetails?.status === 'Out of delivery'
+                              ? '#9E891A'
+                              : orderDetails?.status === 'Delivered'
+                              ? '#F16703'
+                              : orderDetails?.status === 'Assign to delivery'
+                              ? '#8532EF'
+                              : '#BA12C9',
+                          backgroundColor:
+                            orderDetails?.status === 'Failed'
+                              ? '#D2B0B0'
+                              : orderDetails?.status === 'Cancel'
+                              ? '#DEB1E2'
+                              : orderDetails?.status === 'Out of delivery'
+                              ? '#F9F1C8'
+                              : orderDetails?.status === 'Delivered'
+                              ? '#FFC69C'
+                              : orderDetails?.status === 'Assign to delivery'
+                              ? '#DFC7FF'
+                              : '#D2B0B0',
+                          fontSize: 12,
+                        },
+                      ]}>
+                      {orderDetails?.status}
+                    </Text>
+                  </View>
+                </Pressable>
               </View>
               <View
                 style={[
@@ -251,28 +311,26 @@ const OrderDetails = ({route, navigation}: any) => {
                 )}
                 showsVerticalScrollIndicator={false}
                 numColumns={1}
-                onEndReachedThreshold={0.5}
               />
-              <View style={commonStyles.flexAlignEnd}>
-                <Text style={[textStyles.gray14400]}>
-                  Total: {orderDetails?.total_payment}
-                </Text>
-              </View>
+              <Text style={[textStyles.gray14400]}>
+                Total bill: {orderDetails?.total_payment}
+              </Text>
             </View>
-
-            <Button
-              style={styles.buttonBottom}
-              text="Click for Confirmation >>"
-              onPress={() => {
-                setModalDetails({
-                  visible: true,
-                });
-              }}
-            />
           </View>
+          <Button
+            style={{marginHorizontal: 10}}
+            text="Click for Confirmation >>"
+            onPress={() => {
+              setModalDetails({
+                visible: true,
+              });
+            }}
+          />
         </ScrollView>
       </SafeAreaView>
-      <UIModal visible={modalDetails?.visible}>
+      <UIModal
+        onDismiss={() => setModalDetails({})}
+        visible={modalDetails?.visible}>
         <View>
           <Text
             style={[
@@ -302,6 +360,7 @@ const OrderDetails = ({route, navigation}: any) => {
           </View>
         </View>
       </UIModal>
+      <Loader visible={isLoading} color={Colors.PRIMARY} />
     </>
   );
 };
@@ -361,12 +420,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderColor: '#EDEDED',
   },
-  buttonBottom: {
-    position: 'absolute',
-    bottom: 20,
-    right: 10,
-    left: 10,
-  },
   promotionImg: {
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12,
@@ -384,5 +437,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     padding: 5,
+  },
+  bg_status: {
+    padding: 5,
+    textAlign: 'center',
+    borderRadius: 8,
+  },
+  activeStatus: {
+    borderRadius: 8,
   },
 });

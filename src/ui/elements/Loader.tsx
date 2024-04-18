@@ -3,7 +3,7 @@ import React from 'react';
 
 // PROJECT IMPORT
 import {Colors} from '../../constant';
-import { hp, wp } from '../../commonFunctions';
+import {hp, wp} from '../../commonFunctions';
 
 // THIRD - PARTY IMPORT
 import {ActivityIndicator, ActivityIndicatorProps} from 'react-native-paper';
@@ -13,7 +13,7 @@ interface LoaderProps extends ActivityIndicatorProps {
 }
 
 const Loader = (props: LoaderProps) => {
-  const {visible, size = 'large', color = Colors.YELLOW, children} = props;
+  const {visible, size = 'large', color = Colors.PRIMARY, children} = props;
 
   if (!visible) {
     return <></>;
@@ -24,9 +24,10 @@ const Loader = (props: LoaderProps) => {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'tranparent',
+        backgroundColor: 'white',
         width: wp(100),
         height: hp(100),
+        position:'absolute'
       }}>
       <ActivityIndicator size={size} color={color} />
       {children}
