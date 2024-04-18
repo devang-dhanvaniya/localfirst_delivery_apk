@@ -41,3 +41,9 @@ export {default as HomeIcon} from './HomeIcon';
 
 export {default as LogoutIcon} from './LogoutIcon';
 export {default as NotificationIcon} from './NotificationIcon';
+
+export {default as DashAssignIcon} from './DashAssignIcon';
+export {default as DashOutofIcon} from './DashOutofIcon';
+export {default as DashDeliveryIcon} from './DashDeliveryIcon';
+export {default as DashCancelIcon} from './DashCancelIcon';
+export {default as DashFailedIcon} from './DashFailedIcon';

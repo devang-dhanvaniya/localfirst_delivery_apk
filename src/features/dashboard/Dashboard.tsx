@@ -66,9 +66,16 @@ const Dashboard = ({navigation}: any) => {
   }, [isFocused]);
 
   const Item = (item: any) => {
+    const lastIndex = dashboardSummaryInitialItems?.length - 1;
+
     return (
       <>
-        <View style={[commonStyles.whiteCard, styles.pageBox]}>
+        <View
+          style={[
+            styles.pageBox,
+            item?.index % 2 === 0 ? styles.even : styles.odd,
+            lastIndex === item?.index ? styles.BorderBottom : null,
+          ]}>
           <View
             style={[
               commonStyles.flexBetweenCenter,
@@ -79,7 +86,7 @@ const Dashboard = ({navigation}: any) => {
             <View style={[commonStyles.flexAlignCenter, {gap: 5}]}>
               <Icon name={item?.image} />
               <View>
-                <Text style={textStyles.gray14600}>{item.heading}</Text>
+                <Text style={textStyles.gray14400}>{item.heading}</Text>
                 <Text style={styles.value}>
                   {seperator(+[items?.[item?.keys]], item?.isRupee)}
                 </Text>
@@ -104,7 +111,7 @@ const Dashboard = ({navigation}: any) => {
     );
   };
 
-  const ActiveOrdersBox = (item: any) => {
+  const ActiveOrdersBox = (item: any, index: any) => {
     const addressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',
@@ -184,12 +191,7 @@ const Dashboard = ({navigation}: any) => {
     <SafeAreaView style={styles.mainbox}>
       <ScrollView>
         {deliveryDetails?.first_name || deliveryDetails?.last_name ? (
-          <View
-            style={[
-              commonStyles.whiteCard,
-              commonStyles.flexAlignCenter,
-              {marginHorizontal: 10},
-            ]}>
+          <View style={[commonStyles.whiteCard, commonStyles.flexAlignCenter,{marginHorizontal:10}]}>
             <FastImage
               source={require('../../assets/images/Profile.png')}
               style={{width: 40, height: 40, borderRadius: 15, marginRight: 10}}
@@ -229,7 +231,7 @@ const Dashboard = ({navigation}: any) => {
             <Text
               style={{
                 fontSize: 16,
-                fontWeight:'700',
+                fontWeight: '700',
                 color: Colors.WHITE,
               }}>
               ₹ {items?.shipping_charge}
@@ -238,15 +240,21 @@ const Dashboard = ({navigation}: any) => {
           </View>
         </View>
 
-        <List
-          data={dashboardSummaryInitialItems}
-          renderItem={({item, index}) => <Item {...item} index={index} />}
-          numColumns={2}
-          refreshControl={undefined}
-          style={{gap: 2}}
-          scrollEnabled={false}
-          columnWrapperStyle={commonStyles.flatList}
-        />
+        <View style={[styles.dashSummary]}>
+          <List
+            data={dashboardSummaryInitialItems}
+            renderItem={({item, index}) => <Item {...item} index={index} />}
+            numColumns={2}
+            refreshControl={undefined}
+            style={styles.itemsMain}
+            scrollEnabled={false}
+            // columnWrapperStyle={[styles.flatList]}
+            // contentContainerStyle={{
+            //   backgroundColor: Colors.WHITE,
+            //   paddingHorizontal: wp(2),
+            // }}
+          />
+        </View>
         <View style={{marginHorizontal: 10}}>
           <Button
             text="All Orders"
@@ -319,9 +327,9 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   value: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    color: '#232323',
+    color: Colors.SECONDARY,
   },
 
   // Chartsec
@@ -401,9 +409,63 @@ const styles = StyleSheet.create({
     width: '100%',
     resizeMode: 'cover',
   },
+  itemsMain: {
+    borderRadius: 10,
+    paddingTop: 15,
+    paddingBottom: 0,
+    // ...Platform.select({
+    //   ios: {
+    //     shadowColor: '#000',
+    //     shadowOffset: {width: 0, height: 5},
+    //     shadowOpacity: 0.1,
+    //     shadowRadius: 30,
+    //   },
+    //   android: {
+    //     shadowOffset: {width: 0, height: 5},
+    //     elevation: 2,
+    //   },
+    // }),
+  },
   pageBox: {
-    width: wp(46),
-    marginBottom: 0,
-    backgroundColor: '#F9EBEA',
+    width: wp(49),
+    borderRadius: 0,
+    padding: 10,
+  },
+  flatList: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: wp(100),
+    backgroundColor: 'white',
+  },
+  even: {
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: '#EAEAEA',
+  },
+  odd: {
+    borderBottomWidth: 1,
+    borderColor: '#EAEAEA',
+  },
+  BorderBottom: {
+    borderBottomWidth: 0,
+  },
+  dashSummary: {
+    marginHorizontal: 10,
+    borderRadius: 20,
+    padding: 10,
+    backgroundColor: 'white',
+
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 5},
+        shadowOpacity: 0.1,
+        shadowRadius: 30,
+      },
+      android: {
+        shadowOffset: {width: 0, height: 5},
+        elevation: 2,
+      },
+    }),
   },
 });
