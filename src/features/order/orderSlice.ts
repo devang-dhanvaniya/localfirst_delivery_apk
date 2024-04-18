@@ -59,12 +59,12 @@ const orderSlice = createSlice({
         state.dashboardItems = payload?.data || initialState.dashboardItems;
       },
     );
-    builder.addMatcher(
-      orderApi.endpoints.getOrderDetails.matchFulfilled,
-      (state, {payload}: any) => {
-        state.orderDetails = payload?.data || initialState.orderDetails;
-      },
-    );
+    // builder.addMatcher(
+    //   orderApi.endpoints.getOrderDetails.matchFulfilled,
+    //   (state, {payload}: any) => {
+    //     state.orderDetails = payload?.data || initialState.orderDetails;
+    //   },
+    // );
     builder.addMatcher(
       orderApi.endpoints.getDeliveryPersonDetails.matchFulfilled,
       (state, {payload}: any) => {
@@ -96,12 +96,12 @@ export const useOrderItems = () => {
   return useMemo(() => items, [items]);
 };
 
-export const selectGetOrderDetails = (state: RootState) =>
-  state.order.orderDetails;
-export const useGetOrderDetails = () => {
-  const orderDetails = useAppSelector(selectGetOrderDetails);
-  return useMemo(() => orderDetails, [orderDetails]);
-};
+// export const selectGetOrderDetails = (state: RootState) =>
+//   state.order.orderDetails;
+// export const useGetOrderDetails = () => {
+//   const orderDetails = useAppSelector(selectGetOrderDetails);
+//   return useMemo(() => orderDetails, [orderDetails]);
+// };
 
 export const selectGetDeliveryDetails = (state: RootState) =>
   state.order.deliveryDetails;

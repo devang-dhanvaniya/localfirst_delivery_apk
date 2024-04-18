@@ -7,38 +7,46 @@ import {Icon} from '../icons';
 import {useAuth} from '../../hooks';
 import {commonStyles} from '../../styles';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 
 const Header = () => {
   const {clearAuth} = useAuth();
   const handleNotificationPress = () => {
     navigationServices.navigate(Navigator.NOTIFICATION);
   };
-  const route =  useRoute()
+  const route = useRoute();
 
   return (
     <View style={{flexDirection: 'row', alignItems: 'center'}}>
       <TouchableOpacity
         style={{flexDirection: 'row', justifyContent: 'center'}}>
-        {route?.name === 'DASHBOARD' ? <View
-          style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
-          <TouchableOpacity onPress={handleNotificationPress}>
-            <Icon
-              name="NotificationIcon"
-              stroke={Colors.GREEN}
-              strokeWidth={2}
-              fill={Colors.BLACK}
-            />
-          </TouchableOpacity>
-        </View> : null}
-        <Pressable
-          onPress={() => {
-            clearAuth();
-          }}>
-          <View style={[commonStyles.flexAlignCenter, styles.logoutBtn]}>
-            <Icon name="LogoutIcon" size={18} />
-          </View>
-        </Pressable>
+        {route?.name === 'DASHBOARD' ? (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginRight: 10,
+              }}>
+              <TouchableOpacity onPress={handleNotificationPress}>
+                <Icon
+                  name="NotificationIcon"
+                  stroke={Colors.GREEN}
+                  strokeWidth={2}
+                  fill={Colors.BLACK}
+                />
+              </TouchableOpacity>
+            </View>
+            <Pressable
+              onPress={() => {
+                clearAuth();
+              }}>
+              <View style={[commonStyles.flexAlignCenter, styles.logoutBtn]}>
+                <Icon name="LogoutIcon" size={18} />
+              </View>
+            </Pressable>
+          </>
+        ) : null}
         {/* <Pressable onPress={handleProfilePress}>
           <FastImage
             source={require('../../assets/images/Profile.png')}

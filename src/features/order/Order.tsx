@@ -70,7 +70,7 @@ const Order = ({navigation}: any) => {
     return [{[VALUE]: ALL, [LABEL]: ALL}, ...orderStatusOtions];
   };
 
-  const OrderBox = (item: any) => {  
+  const OrderBox = (item: any) => {
     const shippingAddressUser = [
       item?.shipping_address?.address1 || '',
       item?.shipping_address?.landmark || '',

@@ -7,39 +7,34 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useRef, useState} from 'react';
+import React, {useState} from 'react';
 import {commonStyles, textStyles} from '../../styles';
 import {Colors, Navigator} from '../../constant';
-import {Button, List, Loader, UIImage, UIModal} from '../../ui';
+import {Button, List, Loader, UIModal} from '../../ui';
 import {
   useGetOrderDetailsQuery,
   useUpdatePaymentOrderMutation,
 } from './orderApi';
-import {useGetOrderDetails} from './orderSlice';
-import ControlledImagePicker from '../../ui/pickers/ControlledImagePicker';
+// import {useGetOrderDetails} from './orderSlice';
 import {prepareImageUrl} from '../../commonFunctions';
 import FastImage from 'react-native-fast-image';
-import DeleteModal from '../common/DeleteModal';
 import {RadioButton} from 'react-native-paper';
 import {useAuth} from '../../hooks';
 
 const OrderDetails = ({route, navigation}: any) => {
-  const {resToast, setResToast} = useAuth();
-  const ref = useRef<any>();
+  const {setResToast} = useAuth();
   const orderId = route?.params?.id;
-  const orderDetails = useGetOrderDetails();
+
   const [modalDetails, setModalDetails] = useState<any>({});
   const [checked, setChecked] = React.useState('cash');
   const [updatePaymentOrder] = useUpdatePaymentOrderMutation();
-  const {isLoading} = useGetOrderDetailsQuery(orderId);
-
-  console.log(orderDetails, 'orderDetails');
+  const {isLoading, data: orderDetails} = useGetOrderDetailsQuery(orderId);
 
   const addressUser = [
-    orderDetails?.shipping_address?.address1 || '',
-    orderDetails?.shipping_address?.landmark || '',
-    orderDetails?.shipping_address?.city || '',
-    orderDetails?.shipping_address?.pincode || '',
+    orderDetails?.data?.shipping_address?.address1 || '',
+    orderDetails?.data?.shipping_address?.landmark || '',
+    orderDetails?.data?.shipping_address?.city || '',
+    orderDetails?.data?.shipping_address?.pincode || '',
   ]
     .filter(Boolean)
     .join(', ');
@@ -48,13 +43,13 @@ const OrderDetails = ({route, navigation}: any) => {
     try {
       const payload = {
         payment_mode: checked,
-        order_id: orderDetails?.id,
+        order_id: orderDetails?.data?.id,
       };
 
       const res = await updatePaymentOrder(payload).unwrap();
       if (res) {
         navigation.navigate(Navigator.OTP_VERIFICATION, {
-          id: orderDetails?.id,
+          id: orderDetails?.data?.id,
         });
         setModalDetails({});
       }
@@ -113,8 +108,8 @@ const OrderDetails = ({route, navigation}: any) => {
 
   return (
     <>
-      <SafeAreaView>
-        <ScrollView>
+      <SafeAreaView style={commonStyles.container}>
+        <ScrollView style={[commonStyles.container]}>
           <View style={[commonStyles.container, styles.pageMain]}>
             {/* Restaurant Detail */}
             <View style={commonStyles.whiteCard}>
@@ -136,10 +131,10 @@ const OrderDetails = ({route, navigation}: any) => {
                   </View>
                   <View style={commonStyles.container}>
                     <Text style={textStyles.dark14600}>
-                      {orderDetails?.store?.store_name || ''}
+                      {orderDetails?.data?.store?.store_name || ''}
                     </Text>
                     <Text style={textStyles.gray14400}>
-                      {orderDetails?.pickup_address?.pickup_address || ''}
+                      {orderDetails?.data?.pickup_address?.pickup_address || ''}
                     </Text>
                   </View>
                 </View>
@@ -178,7 +173,7 @@ const OrderDetails = ({route, navigation}: any) => {
                     {/* <FastImage
                 style={styles.promotionImg}
                 source={{
-                  uri: prepareImageUrl(orderDetails?.store?.photo)?.uri,
+                  uri: prepareImageUrl(orderDetails?.data?.store?.photo)?.uri,
                   headers: {Authorization: 'someAuthtoken'},
                   priority: FastImage.priority.high,
                 }}
@@ -191,8 +186,8 @@ const OrderDetails = ({route, navigation}: any) => {
                   </View>
                   <View style={commonStyles.container}>
                     <Text style={textStyles.dark14600}>
-                      {orderDetails?.shipping_address?.name || ''}{' '}
-                      {orderDetails?.shipping_address?.lname || ''}
+                      {orderDetails?.data?.shipping_address?.name || ''}{' '}
+                      {orderDetails?.data?.shipping_address?.lname || ''}
                     </Text>
                     <Text style={textStyles.gray14400}>{addressUser}</Text>
                   </View>
@@ -222,11 +217,11 @@ const OrderDetails = ({route, navigation}: any) => {
                 <Text style={textStyles.dark14600}>Item details</Text>
                 <Pressable
                   onPress={() => {
-                    orderDetails?.status === 'Assign to delivery'
+                    orderDetails?.data?.status === 'Assign to delivery'
                       ? setModalDetails({
                           visible: true,
-                          id: orderDetails?.id,
-                          index: orderDetails?.index,
+                          id: orderDetails?.data?.id,
+                          index: orderDetails?.data?.index,
                         })
                       : null;
                     setResToast({
@@ -245,33 +240,35 @@ const OrderDetails = ({route, navigation}: any) => {
                         styles.bg_status,
                         {
                           color:
-                            orderDetails?.status === 'Failed'
+                            orderDetails?.data?.status === 'Failed'
                               ? '#D34747'
-                              : orderDetails?.status === 'Cancel'
+                              : orderDetails?.data?.status === 'Cancel'
                               ? '#BA12C9'
-                              : orderDetails?.status === 'Out of delivery'
+                              : orderDetails?.data?.status === 'Out of delivery'
                               ? '#9E891A'
-                              : orderDetails?.status === 'Delivered'
+                              : orderDetails?.data?.status === 'Delivered'
                               ? '#F16703'
-                              : orderDetails?.status === 'Assign to delivery'
+                              : orderDetails?.data?.status ===
+                                'Assign to delivery'
                               ? '#8532EF'
                               : '#BA12C9',
                           backgroundColor:
-                            orderDetails?.status === 'Failed'
+                            orderDetails?.data?.status === 'Failed'
                               ? '#D2B0B0'
-                              : orderDetails?.status === 'Cancel'
+                              : orderDetails?.data?.status === 'Cancel'
                               ? '#DEB1E2'
-                              : orderDetails?.status === 'Out of delivery'
+                              : orderDetails?.data?.status === 'Out of delivery'
                               ? '#F9F1C8'
-                              : orderDetails?.status === 'Delivered'
+                              : orderDetails?.data?.status === 'Delivered'
                               ? '#FFC69C'
-                              : orderDetails?.status === 'Assign to delivery'
+                              : orderDetails?.data?.status ===
+                                'Assign to delivery'
                               ? '#DFC7FF'
                               : '#D2B0B0',
                           fontSize: 12,
                         },
                       ]}>
-                      {orderDetails?.status}
+                      {orderDetails?.data?.status}
                     </Text>
                   </View>
                 </Pressable>
@@ -282,30 +279,30 @@ const OrderDetails = ({route, navigation}: any) => {
                   {paddingTop: 8, marginBottom: 10},
                 ]}>
                 <Text style={textStyles.theme12600}>
-                  Total Item: {orderDetails?.order_item?.length}
+                  Total Item: {orderDetails?.data?.order_item?.length}
                 </Text>
-                {orderDetails?.payment_type ? (
+                {orderDetails?.data?.payment_type ? (
                   <View style={[commonStyles.flexAlignCenter, {gap: 3}]}>
                     <Text
                       style={[
-                        orderDetails?.payment_type === 'COD'
+                        orderDetails?.data?.payment_type === 'COD'
                           ? styles.badge_cod
                           : styles.badge_ofd,
                       ]}></Text>
                     <Text
                       style={[
-                        orderDetails?.payment_type === 'COD'
+                        orderDetails?.data?.payment_type === 'COD'
                           ? textStyles.theme14700
                           : textStyles.green12600,
                       ]}>
-                      {orderDetails?.payment_type}
+                      {orderDetails?.data?.payment_type}
                     </Text>
                   </View>
                 ) : null}
               </View>
               <List
                 isLoading={false}
-                data={orderDetails?.order_item || []}
+                data={orderDetails?.data?.order_item || []}
                 renderItem={({item, index}) => (
                   <OrderDetailsBox {...item} index={index} />
                 )}
@@ -313,12 +310,14 @@ const OrderDetails = ({route, navigation}: any) => {
                 numColumns={1}
               />
               <Text style={[textStyles.gray14400]}>
-                Total bill: {orderDetails?.total_payment}
+                Total bill: {orderDetails?.data?.total_payment}
               </Text>
             </View>
           </View>
+        </ScrollView>
+        {orderDetails?.data?.status !== 'Delivered' ? (
           <Button
-            style={{marginHorizontal: 10}}
+            style={styles.bottomButton}
             text="Click for Confirmation >>"
             onPress={() => {
               setModalDetails({
@@ -326,7 +325,7 @@ const OrderDetails = ({route, navigation}: any) => {
               });
             }}
           />
-        </ScrollView>
+        ) : null}
       </SafeAreaView>
       <UIModal
         onDismiss={() => setModalDetails({})}
@@ -445,5 +444,11 @@ const styles = StyleSheet.create({
   },
   activeStatus: {
     borderRadius: 8,
+  },
+  bottomButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 10,
+    left: 10,
   },
 });
