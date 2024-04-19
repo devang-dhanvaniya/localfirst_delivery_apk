@@ -23,14 +23,14 @@ export const dashboardSummaryInitialItems = [
   {
     keys: 'failed_order',
     heading: 'Failed',
-    image: 'DashCancelIcon',
+    image: 'DashFailedIcon',
     background: '#FFEEDD',
     isRupee: false,
   },
   {
     keys: 'cancel_order',
     heading: 'Cancel',
-    image: 'DashFailedIcon',
+    image: 'DashCancelIcon',
     background: '#FFE7E7',
     isRupee: false,
   },

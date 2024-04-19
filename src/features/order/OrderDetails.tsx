@@ -30,6 +30,8 @@ const OrderDetails = ({route, navigation}: any) => {
   const [updatePaymentOrder] = useUpdatePaymentOrderMutation();
   const {isLoading, data: orderDetails} = useGetOrderDetailsQuery(orderId);
 
+  console.log(orderDetails, 'orderDetailsorderDetails');
+
   const addressUser = [
     orderDetails?.data?.shipping_address?.address1 || '',
     orderDetails?.data?.shipping_address?.landmark || '',
@@ -50,6 +52,7 @@ const OrderDetails = ({route, navigation}: any) => {
       if (res) {
         navigation.navigate(Navigator.OTP_VERIFICATION, {
           id: orderDetails?.data?.id,
+          mob_no: orderDetails?.data?.shipping_address?.mob_no,
         });
         setModalDetails({});
       }

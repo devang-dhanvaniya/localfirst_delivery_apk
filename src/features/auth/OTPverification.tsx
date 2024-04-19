@@ -19,6 +19,7 @@ import {useUpdateOrderStatusMutation} from '../order/orderApi';
 import {Colors} from '../../constant';
 import FastImage from 'react-native-fast-image';
 import UIFastImage from '../../ui/images/UIFastImage';
+import { commonStyles } from '../../styles';
 
 // type InputProps = {
 //   length?: number;
@@ -93,7 +94,7 @@ const OTPverification = ({route}: any) => {
                 />
                 <Text style={styles.title}>OTP Verification</Text>
                 <Text style={styles.text}>
-                  Enter the OTP sent to +91 9876543210
+                  Enter the OTP sent to { route?.params?.mob_no}
                 </Text>
               </View>
               <View style={styles.inputContainer}>
@@ -120,15 +121,15 @@ const OTPverification = ({route}: any) => {
                 ))}
               </View>
               <Text style={styles.donttext}>00:{counter} Sec</Text>
-              <Text style={styles.donttext}>
-                Don’t receive code?{' '}
+              <View style={commonStyles.flexCenter}>
+                <Text style={styles.donttext}>Don’t receive code? </Text>
                 <Pressable
                   onPress={() => {
                     setCounter(60);
                   }}>
                   <Text style={styles.signupText}>Re-send</Text>
                 </Pressable>
-              </Text>
+              </View>
               <View>
                 <Button text="Submit" onPress={onStatusChange} />
               </View>
@@ -138,12 +139,11 @@ const OTPverification = ({route}: any) => {
       ) : (
         <View>
           <Image
-            style={{width: 100, height: 100,borderWidth:2}}
-            source={require('../../assets/images/successGif.gif')}
-            >
-
-            </Image>
-            <Text style={{color:'red',borderWidth:2}}>hhfsdhfsdjkhfjksdhf</Text>
+            style={{width: 100, height: 100, borderWidth: 2}}
+            source={require('../../assets/images/successGif.gif')}></Image>
+          <Text style={{color: 'red', borderWidth: 2}}>
+            hhfsdhfsdjkhfjksdhf
+          </Text>
         </View>
       )}
     </>

@@ -239,14 +239,14 @@ const Order = ({navigation}: any) => {
         <ScrollView>
           <View
             style={{
-              paddingHorizontal: 10,
+              // paddingHorizontal: 10,
               gap: 10,
             }}>
             <View
               style={{
                 alignItems: 'center',
                 width: wp(100),
-                backgroundColor: 'transparent',
+                backgroundColor: Colors.WHITE,
               }}>
               <Tabs
                 currentTab={filter?.status}
@@ -271,6 +271,7 @@ const Order = ({navigation}: any) => {
               setFilter={setFilter}
               initialFilter={initialLocalFilter}
               onEndReachedThreshold={0.5}
+              contentContainerStyle={{paddingHorizontal: 10}}
             />
           </View>
         </ScrollView>

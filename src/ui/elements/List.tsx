@@ -1,107 +1,150 @@
 import {
-    FlatList,
-    FlatListProps,
-    RefreshControl,
-    StyleSheet,
-    View,
+  FlatList,
+  FlatListProps,
+  RefreshControl,
+  StyleSheet,
+  View,
 } from 'react-native';
 import React from 'react';
 
 // PROJECT IMPORT
-import { Filter } from '../../features/common';
-import { hp, wp } from '../../commonFunctions';
+import {Filter} from '../../features';
+import {hp, wp} from '../../commonFunctions';
+import {Text} from '../typography';
 
 // THIRD - PARTY IMPORT
-import { ActivityIndicator } from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 
 export interface ListProps extends FlatListProps<any> {
-    isLoading?: boolean;
-    filter?: Filter;
-    setFilter?: React.Dispatch<React.SetStateAction<Filter>>;
-    initialFilter?: any;
-    isRefresh?: boolean;
+  isLoading?: boolean;
+  filter?: Filter;
+  setFilter?: React.Dispatch<React.SetStateAction<Filter>>;
+  initialFilter?: any;
+  isRefresh?: boolean;
+  height?: any;
+  width?: any;
 }
 const List = (props: ListProps) => {
-    const {
-        isLoading,
-        filter,
-        setFilter,
-        data,
-        isRefresh,
-        initialFilter,
-        horizontal,
-        ...rest
-    } = props;
+  const {
+    isLoading,
+    filter,
+    setFilter,
+    data,
+    isRefresh,
+    initialFilter,
+    horizontal,
+    height = hp(80),
+    width = wp(100),
+    ...rest
+  } = props;
 
-    const Footer = () => {
-        return (
-            <View style={styles.footer}>
-                {isLoading ? <ActivityIndicator /> : null}
-            </View>
-        );
-    };
-
-    if (isLoading && (filter?.page_no === 1 || !filter)) {
-        return (
-            <View
-                style={{
-                    width: wp(100),
-                    height:horizontal ? hp(15) : hp(80),
-                    flexDirection: 'row',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}>
-                <ActivityIndicator />
-            </View>
-        );
-    }
-
+  const Footer = () => {
     return (
-        <>
-            <FlatList
-                data={data}
-                horizontal={horizontal}
-                ListFooterComponent={() => <Footer />}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={!!(isLoading && filter && setFilter)}
-                        onRefresh={() => {
-                            if (!setFilter || !initialFilter) {
-                                return;
-                            }
-
-                            setFilter?.({
-                                ...initialFilter,
-                            });
-                        }}
-                        progressViewOffset={200}
-                    />
-                }
-                onEndReached={e => {
-                    if (!filter || !setFilter) {
-                        return;
-                    }
-                    if (+filter?.page_no * +filter?.limit <= (data || [])?.length) {
-                        setFilter?.({
-                            ...filter,
-                            page_no: filter?.page_no + 1,
-                        });
-                    }
-                }}
-                keyExtractor={(_, index) => index?.toString()}
-                {...rest}
-            />
-        </>
+      <>
+        {isLoading ? (
+          <View style={styles.footer}>
+            <ActivityIndicator />
+          </View>
+        ) : null}
+      </>
     );
+  };
+
+  const EmptyComponent = () => {
+    return (
+      <>
+        <View
+          style={[
+            styles.content,
+            {
+              height: height,
+              width: width,
+            },
+          ]}>
+          <Text>No Content</Text>
+        </View>
+      </>
+    );
+  };
+
+  if (isLoading && (filter?.page_no === 1 || !filter)) {
+    return (
+      <View
+        style={[
+          styles.content,
+          {
+            height: height,
+            width: width,
+          },
+        ]}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  return (
+    <>
+      <FlatList
+        data={data}
+        horizontal={horizontal}
+        ListFooterComponent={() => <Footer />}
+        refreshControl={
+          <RefreshControl
+            refreshing={!!(isLoading && filter && setFilter)}
+            onRefresh={() => {
+              if (!setFilter || !initialFilter) {
+                return;
+              }
+
+              setFilter?.({
+                ...filter,
+                ...initialFilter,
+                isCall: true,
+              });
+            }}
+            progressViewOffset={200}
+          />
+        }
+        onEndReached={e => {
+          if (!filter || !setFilter) {
+            return;
+          }
+          console.log(
+            'End Reached =-==-==->',
+            filter,
+            filter?.page_no * +filter?.limit,
+            data?.length,
+            +filter?.page_no * +filter?.limit <= (data || [])?.length,
+          );
+
+          if (+filter?.page_no * +filter?.limit <= (data || [])?.length) {
+            setFilter?.({
+              ...filter,
+              page_no: +filter?.page_no + 1,
+              isCall: true,
+            });
+          }
+        }}
+        keyExtractor={(_, index) => index?.toString()}
+        ListEmptyComponent={EmptyComponent}
+        {...rest}
+      />
+    </>
+  );
 };
 
 export default List;
 
 const styles = StyleSheet.create({
-    footer: {
-        padding: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
+  footer: {
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  content: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
