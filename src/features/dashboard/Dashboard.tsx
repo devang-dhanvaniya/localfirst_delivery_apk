@@ -349,7 +349,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 20,
     overflow: 'hidden',
-    marginBottom: 20,
+    marginBottom: 10,
     ...Platform.select({
       ios: {
         shadowOffset: {width: 0, height: 5},
